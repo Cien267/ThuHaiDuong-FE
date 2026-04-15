@@ -28,8 +28,8 @@ export const useAuth = () => {
       setAuth(data.user, data.accessToken)
       localStorage.setItem('token', data.accessToken)
       queryClient.invalidateQueries({ queryKey: authKeys.me() })
-      
-        navigate('/dashboard')
+
+      navigate('/dashboard')
     },
     onError: (error: any) => {
       console.error('Login error:', error)

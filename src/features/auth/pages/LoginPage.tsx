@@ -2,7 +2,6 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { AlertCircle, Loader2 } from 'lucide-react'
 import logo from '@/assets/images/logo.png'
-import { Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -26,7 +25,7 @@ import { usePageTitle } from '@/hooks/usePageTitle'
 import { type LoginInput, LoginSchema } from '../types/auth.types'
 
 export const LoginPage = () => {
-  usePageTitle('Login')
+  usePageTitle('Đăng nhập')
   const { login, isLoggingIn, loginError } = useAuth()
 
   const form = useForm<LoginInput>({
@@ -43,12 +42,15 @@ export const LoginPage = () => {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center gap-10 bg-muted/50 px-4">
-      <img src={logo} alt="" className='border rounded-full border-gray-200 shadow-lg'/>
+      <img
+        src={logo}
+        alt=""
+        className="border rounded-full border-gray-200 shadow-lg"
+      />
       <Card className="w-full max-w-md shadow-lg p-10">
-        
         <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold">Login</CardTitle>
-          <CardDescription>Enter your email and password</CardDescription>
+          <CardTitle className="text-2xl font-bold">Đăng nhập</CardTitle>
+          <CardDescription>Nhập email và mật khẩu của bạn</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -72,7 +74,7 @@ export const LoginPage = () => {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Password</FormLabel>
+                    <FormLabel>Mật khẩu</FormLabel>
                     <FormControl>
                       <Input
                         type="password"
@@ -92,23 +94,19 @@ export const LoginPage = () => {
                 </Alert>
               )}
 
-              <Button type="submit" className="w-full" disabled={isLoggingIn}>
+              <Button
+                variant="greenShiny"
+                type="submit"
+                className="w-full"
+                disabled={isLoggingIn}
+              >
                 {isLoggingIn && (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 )}
-                {isLoggingIn ? 'Logging in...' : 'Login'}
+                {isLoggingIn ? 'Đang đăng nhập...' : 'Đăng nhập'}
               </Button>
             </form>
           </Form>
-          <div className="mt-4 text-center text-sm text-gray-900">
-            Don&apos;t have an account?{' '}
-            <Link
-              to="/register"
-              className="text-primary font-semibold hover:underline"
-            >
-              Sign up
-            </Link>
-          </div>
         </CardContent>
       </Card>
     </div>

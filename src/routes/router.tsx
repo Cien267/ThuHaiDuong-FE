@@ -7,9 +7,6 @@ import { SuspenseWrapper } from '@/components/common//SuspenseWrapper'
 import ErrorPage from '@/pages/ErrorPage'
 
 const LoginPage = lazy(() => import('@/features/auth/pages/LoginPage'))
-
-
-
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'))
 const UnauthorizedPage = lazy(() => import('@/pages/UnauthorizedPage'))
 
@@ -35,25 +32,25 @@ export const router = createBrowserRouter([
   {
     element: <PrivateRoute />,
     errorElement: <ErrorPage />,
-   children: [
+    children: [
+      {
+        element: <DefaultLayout />,
+        children: [
           {
-            element: <DefaultLayout />,
-            children: [
-              {
-                path: '/dashboard',
-                // element: (
-                //   // <SuspenseWrapper>
-                //   //   <DashboardPage />
-                //   // </SuspenseWrapper>
-                // ),
-              },
-              {
-                path: '/',
-                element: <Navigate to="/dashboard" replace />,
-              },
-            ],
+            path: '/home',
+            // element: (
+            //   // <SuspenseWrapper>
+            //   //   <DashboardPage />
+            //   // </SuspenseWrapper>
+            // ),
+          },
+          {
+            path: '/',
+            element: <Navigate to="/home" replace />,
           },
         ],
+      },
+    ],
   },
   {
     path: '/unauthorized',

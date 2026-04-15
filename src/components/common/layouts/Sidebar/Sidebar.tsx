@@ -27,7 +27,6 @@ import { Badge } from '@/components/ui/badge'
 import { useAuth } from '@/features/auth/hooks/useAuth'
 import { useState } from 'react'
 import { SIDEBAR_MENU } from '@/constants/sidebar'
-import logo from '@/assets/images/logo.png'
 
 export const Sidebar: React.FC = () => {
   const { user, logout } = useAuth()
@@ -63,7 +62,7 @@ export const Sidebar: React.FC = () => {
   }
 
   const getUserInitials = () => {
-    if (!user?.fullName) return 'Broker'
+    if (!user?.fullName) return 'Admin'
     return user.fullName.split(' ')[0].toUpperCase()
   }
 
@@ -103,8 +102,11 @@ export const Sidebar: React.FC = () => {
         <div className="flex h-full flex-col">
           <div className="flex h-16 items-center justify-between px-4 border-b">
             {!isCollapsed && (
-              <Link to="/">
-                <img src={logo} alt="" className="h-6 w-auto" />
+              <Link
+                to="/"
+                className="text-3xl bg-linear-to-r from-blue-600 to-emerald-600 bg-clip-text text-transparent font-extrabold! inline-block font-[Lavishly_Yours]!"
+              >
+                Thu Hải Đường
               </Link>
             )}
 

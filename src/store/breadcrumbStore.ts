@@ -11,6 +11,6 @@ export const useBreadcrumbStore = create<BreadcrumbState>((set) => ({
     set((state) => ({
       labels: { ...state.labels, [id]: label },
     }))
-    document.title = `${label} | Hoa Hải Đường`
+    document.title = `${label} | Thu Hải Đường`
   },
 }))

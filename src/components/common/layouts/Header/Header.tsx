@@ -1,11 +1,4 @@
-import {
-  Search,
-  User,
-  LogOut,
-  Moon,
-  Sun,
-  ChevronDown,
-} from 'lucide-react'
+import { Search, User, LogOut, Moon, Sun, ChevronDown } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -29,14 +22,13 @@ export const Header: React.FC = () => {
   const { theme, setTheme } = useTheme()
 
   const getUserInitials = () => {
-    if (!user?.fullName) return 'Broker'
+    if (!user?.fullName) return 'Admin'
     return user.fullName.split(' ')[0].toUpperCase()
   }
 
   const toggleTheme = () => {
     setTheme(theme === 'dark' ? 'light' : 'dark')
   }
-
 
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background px-4 lg:px-6 pl-18">
