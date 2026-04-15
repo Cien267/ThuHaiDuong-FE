@@ -28,6 +28,14 @@ const buttonVariants = cva(
         brutal:
           'border-2 border-foreground bg-background shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none active:translate-x-[4px] active:translate-y-[4px]',
         warn: 'bg-amber-500 text-white hover:bg-amber-600 shadow-[0_1px_2px_rgba(245,158,11,0.4)] active:scale-95',
+        green:
+          'bg-emerald-500 text-white hover:bg-emerald-600 shadow-[0_1px_2px_rgba(16,185,129,0.4)] active:scale-95',
+        greenSoft:
+          'bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500/20 border-transparent',
+        greenShiny:
+          'bg-gradient-to-b from-emerald-500 to-emerald-600 text-white border-b-2 border-emerald-500 shadow-inner hover:brightness-110 active:border-b-0 active:translate-y-[1px]',
+        greenGlass:
+          'bg-emerald-500/10 backdrop-blur-md border border-emerald-400/30 text-emerald-600 hover:bg-emerald-500/20 shadow-sm',
       },
       size: {
         default: 'h-9 px-4 py-2 has-[>svg]:px-3',
