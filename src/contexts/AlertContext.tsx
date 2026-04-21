@@ -111,7 +111,7 @@ export const AlertProvider = ({ children }: { children: ReactNode }) => {
           )}
           <AlertDialogFooter>
             <AlertDialogCancel disabled={isLoading}>
-              {config?.cancelText || 'Cancel'}
+              {config?.cancelText || 'Hủy'}
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={handleConfirm}

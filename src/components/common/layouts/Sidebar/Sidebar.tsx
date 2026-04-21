@@ -16,12 +16,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { useAuth } from '@/features/auth/hooks/useAuth'
@@ -252,31 +246,18 @@ export const Sidebar: React.FC = () => {
                   onClick={() => logout()}
                 >
                   <LogOut className="mr-2 h-4 w-4" />
-                  Logout
+                  Đăng xuất
                 </Button>
               </div>
             ) : (
               <TooltipProvider>
                 <div className="space-y-2">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Avatar className="h-8 w-8 cursor-pointer">
-                        <AvatarImage src="" alt={user?.fullName} />
-                        <AvatarFallback>
-                          {getUserInitials().charAt(0)}
-                        </AvatarFallback>
-                      </Avatar>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent
-                      align="end"
-                      side="top"
-                      className="w-56"
-                    >
-                      <DropdownMenuItem asChild>
-                        <span className="cursor-pointer">Edit Profile</span>
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                  <Avatar className="h-8 w-8 cursor-pointer">
+                    <AvatarImage src="" alt={user?.fullName} />
+                    <AvatarFallback>
+                      {getUserInitials().charAt(0)}
+                    </AvatarFallback>
+                  </Avatar>
 
                   <Tooltip>
                     <TooltipTrigger asChild>
@@ -290,7 +271,7 @@ export const Sidebar: React.FC = () => {
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent side="right">
-                      <p>Logout</p>
+                      <p>Đăng xuất</p>
                     </TooltipContent>
                   </Tooltip>
                 </div>

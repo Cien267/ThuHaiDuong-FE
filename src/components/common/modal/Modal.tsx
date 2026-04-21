@@ -1,6 +1,6 @@
-import React from "react"
-import { Button } from "@/components/ui/button"
-import { modalManager, type ModalConfig } from "./ModalManager"
+import React from 'react'
+import { Button } from '@/components/ui/button'
+import { modalManager, type ModalConfig } from './ModalManager'
 
 export const Modal = {
   open: (config: ModalConfig) => {
@@ -36,7 +36,7 @@ export const Modal = {
                 resolve(false)
               }}
             >
-              {options.cancelText || "Cancel"}
+              {options.cancelText || 'Hủy'}
             </Button>
             <Button
               onClick={() => {
@@ -45,7 +45,7 @@ export const Modal = {
                 resolve(true)
               }}
             >
-              {options.confirmText || "Confirm"}
+              {options.confirmText || 'Xác nhận'}
             </Button>
           </div>
         ),
@@ -72,7 +72,7 @@ export const Modal = {
             }}
             className="w-full"
           >
-            {options.buttonText || "OK"}
+            {options.buttonText || 'OK'}
           </Button>
         ),
       })

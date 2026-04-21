@@ -84,14 +84,14 @@ export const Header: React.FC = () => {
               <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
                 <User className="mr-2 h-4 w-4" />
                 <span className="w-full" onClick={openEditProfileModal}>
-                  Profile
+                  Tài khoản
                 </span>
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => logout()}>
               <LogOut className="mr-2 h-4 w-4" />
-              <span>Logout</span>
+              <span>Đăng xuất</span>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

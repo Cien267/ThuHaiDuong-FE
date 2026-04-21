@@ -22,7 +22,6 @@ import {
   type ChangePasswordInput,
 } from '@/features/auth/types/auth.types'
 import { toast } from 'sonner'
-import { DatePicker } from '@/components/common/DatePicker'
 import { format } from 'date-fns'
 
 const ProfileModalContent = ({ onClose }: { onClose: () => void }) => {
@@ -78,8 +77,8 @@ const ProfileModalContent = ({ onClose }: { onClose: () => void }) => {
     <div className="space-y-4">
       <Tabs defaultValue="general" className="w-full">
         <TabsList className="bg-transparent h-12 w-full justify-start gap-6 p-0 pb-1 border-b rounded-none">
-          <TabsTrigger value="general">General</TabsTrigger>
-          <TabsTrigger value="security">Security</TabsTrigger>
+          <TabsTrigger value="general">Chung</TabsTrigger>
+          <TabsTrigger value="security">Bảo mật</TabsTrigger>
         </TabsList>
 
         <div className="pt-6">
@@ -94,7 +93,7 @@ const ProfileModalContent = ({ onClose }: { onClose: () => void }) => {
                   name="fullName"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Full Name</FormLabel>
+                      <FormLabel>Họ và tên</FormLabel>
                       <FormControl>
                         <Input {...field} />
                       </FormControl>
@@ -107,27 +106,9 @@ const ProfileModalContent = ({ onClose }: { onClose: () => void }) => {
                   name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Email Address</FormLabel>
+                      <FormLabel>Email</FormLabel>
                       <FormControl>
                         <Input {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={profileForm.control}
-                  name="dateOfBirth"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-col">
-                      <FormLabel>Date Of Birth</FormLabel>
-                      <FormControl>
-                        <DatePicker
-                          value={field.value}
-                          onChange={field.onChange}
-                          placeholder="Pick a date"
-                          disableFutureDates
-                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -138,11 +119,11 @@ const ProfileModalContent = ({ onClose }: { onClose: () => void }) => {
                   name="phoneNumber"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Phone Number</FormLabel>
+                      <FormLabel>Số điện thoại</FormLabel>
                       <FormControl>
                         <Input
                           type="number"
-                          placeholder="Enter phoneNumber number"
+                          placeholder="Nhập số điện thoại"
                           {...field}
                           value={field.value ?? ''}
                           onChange={(e) => {
@@ -157,10 +138,10 @@ const ProfileModalContent = ({ onClose }: { onClose: () => void }) => {
                 />
                 <div className="col-span-2 flex justify-end gap-3 pt-4">
                   <Button type="button" variant="ghost" onClick={onClose}>
-                    Cancel
+                    Hủy
                   </Button>
-                  <Button variant="sky" type="submit">
-                    Save Changes
+                  <Button variant="greenShiny" type="submit">
+                    Lưu thay đổi
                   </Button>
                 </div>
               </form>
@@ -169,10 +150,10 @@ const ProfileModalContent = ({ onClose }: { onClose: () => void }) => {
 
           <TabsContent value="security" className="mt-0 space-y-6">
             <div className="space-y-1">
-              <h3 className="text-lg font-medium">Change Password</h3>
+              <h3 className="text-lg font-medium">Đổi mật khẩu</h3>
               <p className="text-sm text-muted-foreground">
-                Ensure your account is using a long, random password to stay
-                secure.
+                Đảm bảo tài khoản của bạn đang sử dụng một mật khẩu dài, ngẫu
+                nhiên để giữ an toàn.
               </p>
             </div>
 
@@ -186,7 +167,7 @@ const ProfileModalContent = ({ onClose }: { onClose: () => void }) => {
                   name="currentPassword"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Current Password</FormLabel>
+                      <FormLabel>Mật khẩu hiện tại</FormLabel>
                       <FormControl>
                         <Input
                           type="password"
@@ -205,7 +186,7 @@ const ProfileModalContent = ({ onClose }: { onClose: () => void }) => {
                     name="newPassword"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>New Password</FormLabel>
+                        <FormLabel>Mật khẩu mới</FormLabel>
                         <FormControl>
                           <Input
                             type="password"
@@ -222,7 +203,7 @@ const ProfileModalContent = ({ onClose }: { onClose: () => void }) => {
                     name="confirmPassword"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Confirm New Password</FormLabel>
+                        <FormLabel>Xác nhận mật khẩu mới</FormLabel>
                         <FormControl>
                           <Input
                             type="password"
@@ -242,11 +223,11 @@ const ProfileModalContent = ({ onClose }: { onClose: () => void }) => {
                     variant="outline"
                     onClick={() => passwordForm.reset()}
                   >
-                    Reset Form
+                    Reset
                   </Button>
-                  <Button variant="sky" type="submit">
+                  <Button variant="greenShiny" type="submit">
                     <Lock className="mr-2 h-4 w-4" />
-                    Update Password
+                    Cập nhật
                   </Button>
                 </div>
               </form>
@@ -260,8 +241,8 @@ const ProfileModalContent = ({ onClose }: { onClose: () => void }) => {
 
 export const openEditProfileModal = () => {
   Modal.open({
-    title: 'Account Settings',
-    description: 'Manage your public profile and security preferences.',
+    title: 'Cài đặt tài khoản',
+    description: 'Quản lý tài khoản và mật khẩu.',
     content: <ProfileModalContent onClose={() => Modal.close()} />,
     className: 'max-w-2xl!',
   })
