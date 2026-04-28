@@ -1,172 +1,183 @@
-import { useEffect, useMemo } from 'react'
+import { useEffect } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
-import { authService } from '../services/authService'
-import type {
-  ChangePasswordInput,
-  LoginInput,
-  UpdateProfileInput,
-} from '../types/auth.types'
-import useAuthStore from '@/store/authStore'
 import { toast } from 'sonner'
+import { authService } from '../services/authService'
+import useAuthStore from '@/store/authStore'
+import type {
+  LoginInput,
+  ChangePasswordInput,
+  UpdateProfileInput,
+  UpdateUsernameInput,
+  UserRole,
+} from '../types/auth.types'
 
 export const authKeys = {
   all: ['auth'] as const,
-  me: () => [...authKeys.all, 'me'] as const,
-  session: () => [...authKeys.all, 'session'] as const,
-  users: () => [...authKeys.all, 'users'] as const,
+  profile: () => ['profile'] as const,
 }
-
 export const useAuth = () => {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
-  const { setAuth, logout: logoutStore, user, isAuthenticated } = useAuthStore()
+  const {
+    user,
+    profile,
+    isAuthenticated,
+    isInitialized,
+    setAuthFromResult,
+    setProfile,
+    updateUserInfo,
+    logout: logoutStore,
+    hasRole,
+    hasMinRole,
+  } = useAuthStore()
+
+  // Fetch profile after login
+  const profileQuery = useQuery({
+    queryKey: authKeys.profile(),
+    queryFn: authService.getProfile,
+    enabled: isAuthenticated && isInitialized,
+    staleTime: 1000 * 60 * 5,
+    retry: 1,
+  })
+
+  useEffect(() => {
+    if (profileQuery.isSuccess && profileQuery.data) {
+      setProfile(profileQuery.data)
+    }
+  }, [profileQuery.isSuccess, profileQuery.data, setProfile])
 
   const loginMutation = useMutation({
     mutationFn: (credentials: LoginInput) => authService.login(credentials),
     onSuccess: (data) => {
-      setAuth(data.user, data.accessToken)
-      localStorage.setItem('token', data.accessToken)
-      queryClient.invalidateQueries({ queryKey: authKeys.me() })
-
+      setAuthFromResult(data.user, data.accessToken, data.refreshToken)
       navigate('/dashboard')
     },
     onError: (error: any) => {
-      console.error('Login error:', error)
+      toast.error(
+        error?.response?.data?.message ?? 'Login failed. Please try again.'
+      )
     },
   })
 
   const logoutMutation = useMutation({
-    mutationFn: () => authService.logout(),
-    onSuccess: () => {
+    mutationFn: authService.logout,
+    onSettled: () => {
       logoutStore()
-      localStorage.removeItem('token')
       queryClient.clear()
       navigate('/login')
     },
     onError: (error: any) => {
       console.error('Logout error:', error)
-      toast.error(error.message || 'Failed to log out')
     },
   })
 
   const updateProfileMutation = useMutation({
-    mutationFn: (data: UpdateProfileInput) => {
-      data.id = user?.id
-      return authService.updateProfile(data)
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: authKeys.me() })
-      toast.success('Profile updated successfully!')
+    mutationFn: (data: UpdateProfileInput) => authService.updateProfile(data),
+    onSuccess: (updatedProfile) => {
+      setProfile(updatedProfile)
+      toast.success('Profile updated successfully.')
     },
     onError: (error: any) => {
-      console.error('Update profile error:', error)
+      toast.error(error?.response?.data?.message ?? 'Failed to update profile.')
+    },
+  })
+
+  const updateUsernameMutation = useMutation({
+    mutationFn: (data: UpdateUsernameInput) => authService.updateUsername(data),
+    onSuccess: (updatedProfile) => {
+      setProfile(updatedProfile)
+      updateUserInfo({ userName: updatedProfile.userName })
+      toast.success('Username updated successfully.')
+    },
+    onError: (error: any) => {
+      toast.error(
+        error?.response?.data?.message ?? 'Failed to update username.'
+      )
     },
   })
 
   const changePasswordMutation = useMutation({
-    mutationFn: (data: ChangePasswordInput) => {
-      data.id = user?.id
-      return authService.changePassword(data)
-    },
+    mutationFn: (data: ChangePasswordInput) => authService.changePassword(data),
     onSuccess: () => {
-      toast.success(
-        'Password updated successfully! You will be logged out in 3s...'
-      )
+      toast.success('Password changed. You will be logged out in 3 seconds...')
       setTimeout(() => {
         logoutStore()
-        localStorage.removeItem('token')
         queryClient.clear()
         navigate('/login')
       }, 3000)
     },
     onError: (error: any) => {
-      console.error('Change password error:', error)
+      toast.error(
+        error?.response?.data?.message ?? 'Failed to change password.'
+      )
     },
   })
 
-  const currentUserQuery = useQuery({
-    queryKey: authKeys.me(),
-    queryFn: () => authService.getCurrentUser(),
-    enabled: isAuthenticated && !!localStorage.getItem('token'),
-    staleTime: 1000 * 60 * 5,
-    retry: 1,
-  })
-  const { data, isSuccess, isError } = currentUserQuery
-
-  useEffect(() => {
-    if (isSuccess && data) {
-      setAuth(data, localStorage.getItem('token') || '')
-    }
-  }, [isSuccess, data, user?.id, setAuth])
-
-  useEffect(() => {
-    if (isError) {
-      logoutStore()
-      localStorage.removeItem('token')
-      navigate('/login')
-    }
-  }, [isError, logoutStore, navigate])
-
   return {
+    // ── State ────────────────────────────────────────────────────────────────
     user,
+    profile,
     isAuthenticated,
+    isInitialized,
+    isLoadingProfile: profileQuery.isLoading,
 
+    // ── Permission helpers ────────────────────────────────────────────────────
+    hasRole, // hasRole('Admin')
+    hasMinRole, // hasMinRole('Contributor')
+
+    // ── Login ─────────────────────────────────────────────────────────────────
     login: loginMutation.mutate,
     loginAsync: loginMutation.mutateAsync,
     isLoggingIn: loginMutation.isPending,
     loginError: loginMutation.error,
 
+    // ── Logout ────────────────────────────────────────────────────────────────
     logout: logoutMutation.mutate,
     isLoggingOut: logoutMutation.isPending,
 
-    currentUser: currentUserQuery.data,
-    isLoadingUser: currentUserQuery.isLoading,
-    isFetchingUser: currentUserQuery.isFetching,
-    userError: currentUserQuery.error,
-    refetchUser: currentUserQuery.refetch,
-
+    // ── Profile ───────────────────────────────────────────────────────────────
     updateProfile: updateProfileMutation.mutate,
     updateProfileAsync: updateProfileMutation.mutateAsync,
     isUpdatingProfile: updateProfileMutation.isPending,
-    updateProfileError: updateProfileMutation.error,
 
+    updateUsername: updateUsernameMutation.mutate,
+    updateUsernameAsync: updateUsernameMutation.mutateAsync,
+    isUpdatingUsername: updateUsernameMutation.isPending,
+
+    // ── Password ──────────────────────────────────────────────────────────────
     changePassword: changePasswordMutation.mutate,
     changePasswordAsync: changePasswordMutation.mutateAsync,
     isChangingPassword: changePasswordMutation.isPending,
-    changePasswordError: changePasswordMutation.error,
   }
 }
 
-export const useRequireAuth = () => {
+export const useRequireAuth = (minRole?: UserRole) => {
   const navigate = useNavigate()
-  const { isAuthenticated, isLoadingUser } = useAuth()
+  const { isAuthenticated, isInitialized, hasMinRole } = useAuthStore()
 
   useEffect(() => {
-    if (!isLoadingUser && !isAuthenticated) {
-      navigate('/login')
-    }
-  }, [isAuthenticated, isLoadingUser, navigate])
+    if (!isInitialized) return
 
-  return { isAuthenticated, isLoadingUser }
+    if (!isAuthenticated) {
+      navigate('/login', { replace: true })
+      return
+    }
+
+    if (minRole && !hasMinRole(minRole)) {
+      navigate('/403', { replace: true })
+    }
+  }, [isAuthenticated, isInitialized, minRole, navigate, hasMinRole])
+
+  return { isAuthenticated, isInitialized }
 }
 
-export const usePermission = (requiredRole?: string) => {
-  const { user } = useAuth()
+export const usePermission = (minRole?: UserRole) => {
+  const { hasMinRole, user } = useAuthStore()
 
-  const hasPermission = useMemo(() => {
-    if (!user || !requiredRole) return true
-
-    const roleHierarchy: Record<string, number> = {
-      user: 1,
-      manager: 2,
-      admin: 3,
-    }
-
-    return user.roles.some((role) => {
-      return (roleHierarchy[role] || 0) >= (roleHierarchy[requiredRole] || 0)
-    })
-  }, [user, requiredRole])
-
-  return { hasPermission, user }
+  return {
+    hasPermission: !minRole || hasMinRole(minRole),
+    user,
+    role: user?.role ?? null,
+  }
 }

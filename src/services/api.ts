@@ -1,95 +1,152 @@
-import axios, {
-  type AxiosInstance,
-  type AxiosRequestConfig,
-  type AxiosResponse,
-} from 'axios'
-import type { ApiError } from '@/types/api.types'
+import axios, { type AxiosError, type InternalAxiosRequestConfig } from 'axios'
+import { tokenStorage, isTokenExpired } from '@/features/auth/utils/token'
 import useAuthStore from '@/store/authStore'
-import { toast } from 'sonner'
 
-class ApiService {
-  private api: AxiosInstance
+const BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:5000'
 
-  constructor() {
-    this.api = axios.create({
-      baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5129/api',
-      timeout: 10000,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-    this.setupInterceptors()
-  }
+export const api = axios.create({
+  baseURL: BASE_URL,
+  headers: { 'Content-Type': 'application/json' },
+  timeout: 15_000,
+})
 
-  private setupInterceptors(): void {
-    this.api.interceptors.request.use(
-      (config) => {
-        const token = localStorage.getItem('token')
-        if (token) {
-          config.headers.Authorization = `Bearer ${token}`
-        }
+const refreshApi = axios.create({
+  baseURL: BASE_URL,
+  headers: { 'Content-Type': 'application/json' },
+  timeout: 10_000,
+})
+
+let isRefreshing = false
+let pendingQueue: Array<{
+  resolve: (token: string) => void
+  reject: (error: unknown) => void
+}> = []
+
+const processPendingQueue = (error: unknown, token: string | null) => {
+  pendingQueue.forEach(({ resolve, reject }) => {
+    if (error) reject(error)
+    else resolve(token!)
+  })
+  pendingQueue = []
+}
+
+api.interceptors.request.use(
+  async (config: InternalAxiosRequestConfig) => {
+    const accessToken = tokenStorage.getAccess()
+
+    if (!accessToken) return config
+
+    if (isTokenExpired(accessToken, 30)) {
+      const newToken = await proactiveRefresh()
+      if (newToken) {
+        config.headers.Authorization = `Bearer ${newToken}`
         return config
-      },
-      (error) => Promise.reject(error)
-    )
-
-    this.api.interceptors.response.use(
-      (response: AxiosResponse) => {
-        return response
-      },
-      (error) => {
-        if (error.response?.status === 401) {
-          const { logout } = useAuthStore.getState()
-
-          logout()
-          localStorage.removeItem('token')
-          window.location.href = '/login'
-        } else if (error.response?.status === 403) {
-          toast.error('You do not have permission to perform this action.')
-        }
-
-        const apiError: ApiError = {
-          message: error.response?.data?.message || 'An error occurred',
-          statusCode: error.response?.status || 500,
-          errors: error.response?.data?.errors,
-        }
-
-        return Promise.reject(apiError)
       }
-    )
+      return config
+    }
+
+    config.headers.Authorization = `Bearer ${accessToken}`
+    return config
+  },
+  (error) => Promise.reject(error)
+)
+
+api.interceptors.response.use(
+  (response) => response,
+  async (error: AxiosError) => {
+    const originalRequest = error.config as InternalAxiosRequestConfig & {
+      _retry?: boolean
+    }
+
+    if (error.response?.status !== 401 || originalRequest._retry) {
+      return Promise.reject(error)
+    }
+
+    originalRequest._retry = true
+
+    if (isRefreshing) {
+      return new Promise((resolve, reject) => {
+        pendingQueue.push({
+          resolve: (token) => {
+            originalRequest.headers.Authorization = `Bearer ${token}`
+            resolve(api(originalRequest))
+          },
+          reject,
+        })
+      })
+    }
+
+    isRefreshing = true
+
+    try {
+      const refreshToken = tokenStorage.getRefresh()
+
+      if (!refreshToken) throw new Error('No refresh token')
+
+      const { data } = await refreshApi.post('/api/auth/refresh', {
+        refreshToken,
+      })
+
+      const { accessToken, refreshToken: newRefreshToken, user } = data
+
+      tokenStorage.set(accessToken, newRefreshToken)
+
+      useAuthStore
+        .getState()
+        .setAuthFromResult(user, accessToken, newRefreshToken)
+
+      processPendingQueue(null, accessToken)
+
+      originalRequest.headers.Authorization = `Bearer ${accessToken}`
+      return api(originalRequest)
+    } catch (refreshError) {
+      processPendingQueue(refreshError, null)
+      useAuthStore.getState().logout()
+
+      window.location.href = '/login'
+
+      return Promise.reject(refreshError)
+    } finally {
+      isRefreshing = false
+    }
+  }
+)
+
+async function proactiveRefresh(): Promise<string | null> {
+  if (isRefreshing) {
+    // Đợi refresh đang chạy
+    return new Promise((resolve) => {
+      pendingQueue.push({
+        resolve,
+        reject: () => resolve(null),
+      })
+    })
   }
 
-  public get<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
-    return this.api.get<any, T>(url, config)
-  }
+  isRefreshing = true
 
-  public post<T>(
-    url: string,
-    data?: any,
-    config?: AxiosRequestConfig
-  ): Promise<T> {
-    return this.api.post<any, T>(url, data, config)
-  }
+  try {
+    const refreshToken = tokenStorage.getRefresh()
+    if (!refreshToken) return null
 
-  public put<T>(
-    url: string,
-    data?: any,
-    config?: AxiosRequestConfig
-  ): Promise<T> {
-    return this.api.put<any, T>(url, data, config)
-  }
+    const { data } = await refreshApi.post('/api/auth/refresh', {
+      refreshToken,
+    })
 
-  public patch<T>(
-    url: string,
-    data?: any,
-    config?: AxiosRequestConfig
-  ): Promise<T> {
-    return this.api.patch<any, T>(url, data, config)
-  }
+    tokenStorage.set(data.accessToken, data.refreshToken)
+    useAuthStore
+      .getState()
+      .setAuthFromResult(data.user, data.accessToken, data.refreshToken)
 
-  public delete<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
-    return this.api.delete<any, T>(url, config)
+    processPendingQueue(null, data.accessToken)
+    return data.accessToken
+  } catch {
+    processPendingQueue(new Error('Refresh failed'), null)
+    useAuthStore.getState().logout()
+    return null
+  } finally {
+    isRefreshing = false
   }
 }
 
-export default new ApiService()
+export default api
