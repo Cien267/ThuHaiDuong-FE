@@ -22,14 +22,13 @@ export const UnauthorizedPage = () => {
           You don't have permission to access this page.
           {user && (
             <span className="block mt-2 text-sm">
-              Current role:{' '}
-              <span className="font-semibold">{user.roles[0]}</span>
+              Current role: <span className="font-semibold">{user.role}</span>
             </span>
           )}
         </p>
 
         <Link
-          to="/dashboard"
+          to="/home"
           className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
         >
           <Home className="w-4 h-4 mr-2" />

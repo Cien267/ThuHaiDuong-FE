@@ -5,6 +5,7 @@ import { PublicRoute } from './PublicRoute'
 import { DefaultLayout } from '@/layouts/DefaultLayout'
 import { SuspenseWrapper } from '@/components/common//SuspenseWrapper'
 import ErrorPage from '@/pages/ErrorPage'
+import { HomePage } from '@/features/home/pages/HomePage'
 
 const LoginPage = lazy(() => import('@/features/auth/pages/LoginPage'))
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'))
@@ -38,11 +39,11 @@ export const router = createBrowserRouter([
         children: [
           {
             path: '/home',
-            // element: (
-            //   // <SuspenseWrapper>
-            //   //   <DashboardPage />
-            //   // </SuspenseWrapper>
-            // ),
+            element: (
+              <SuspenseWrapper>
+                <HomePage />
+              </SuspenseWrapper>
+            ),
           },
           {
             path: '/',

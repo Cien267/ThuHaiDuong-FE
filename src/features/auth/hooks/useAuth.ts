@@ -51,7 +51,7 @@ export const useAuth = () => {
     mutationFn: (credentials: LoginInput) => authService.login(credentials),
     onSuccess: (data) => {
       setAuthFromResult(data.user, data.accessToken, data.refreshToken)
-      navigate('/dashboard')
+      navigate('/home')
     },
     onError: (error: any) => {
       toast.error(
