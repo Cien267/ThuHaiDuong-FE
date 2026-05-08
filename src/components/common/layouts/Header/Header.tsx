@@ -61,7 +61,10 @@ export const Header: React.FC = () => {
               className="flex items-center gap-2 px-2 hover:bg-accent"
             >
               <Avatar className="h-6 w-6">
-                <AvatarImage src={user?.avatar} alt={user?.fullName} />
+                <AvatarImage
+                  src={user?.avatar ?? ''}
+                  alt={user?.fullName ?? ''}
+                />
                 <AvatarFallback>{getUserInitials().charAt(0)}</AvatarFallback>
               </Avatar>
               <span className="text-sm font-medium">{getUserInitials()}</span>
