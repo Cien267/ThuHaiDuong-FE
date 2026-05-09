@@ -40,12 +40,7 @@ export const Sidebar: React.FC = () => {
 
   const filteredMenuItems = SIDEBAR_MENU.filter((item) => {
     if (!item.roles?.length) return true
-    return (
-      user &&
-      user.roles.every((role) => {
-        return item.roles?.includes(role)
-      })
-    )
+    return user && item.roles?.includes(user.role)
   })
 
   const isActiveRoute = (path: string) => {
@@ -230,7 +225,10 @@ export const Sidebar: React.FC = () => {
               <div className="space-y-3">
                 <div className="relative h-10 w-full flex items-center gap-2 px-2 justify-start">
                   <Avatar className="h-6 w-6">
-                    <AvatarImage src={user?.avatar} alt={user?.fullName} />
+                    <AvatarImage
+                      src={user?.avatar ?? ''}
+                      alt={user?.fullName ?? ''}
+                    />
                     <AvatarFallback>
                       {getUserInitials().charAt(0)}
                     </AvatarFallback>
@@ -253,7 +251,7 @@ export const Sidebar: React.FC = () => {
               <TooltipProvider>
                 <div className="space-y-2">
                   <Avatar className="h-8 w-8 cursor-pointer">
-                    <AvatarImage src="" alt={user?.fullName} />
+                    <AvatarImage src="" alt={user?.fullName ?? ''} />
                     <AvatarFallback>
                       {getUserInitials().charAt(0)}
                     </AvatarFallback>

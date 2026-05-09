@@ -9,6 +9,10 @@ import { HomePage } from '@/features/home/pages/HomePage'
 
 const LoginPage = lazy(() => import('@/features/auth/pages/LoginPage'))
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'))
+const CategoriesPage = lazy(
+  () => import('@/features/categories/pages/CategoriesPage')
+)
+const TagsPage = lazy(() => import('@/features/categories/pages/TagsPage'))
 const UnauthorizedPage = lazy(() => import('@/pages/UnauthorizedPage'))
 
 export const router = createBrowserRouter([
@@ -48,6 +52,27 @@ export const router = createBrowserRouter([
           {
             path: '/',
             element: <Navigate to="/home" replace />,
+          },
+          {
+            path: '/content',
+            children: [
+              {
+                path: 'categories',
+                element: (
+                  <SuspenseWrapper>
+                    <CategoriesPage />
+                  </SuspenseWrapper>
+                ),
+              },
+              {
+                path: 'tags',
+                element: (
+                  <SuspenseWrapper>
+                    <TagsPage />
+                  </SuspenseWrapper>
+                ),
+              },
+            ],
           },
         ],
       },
