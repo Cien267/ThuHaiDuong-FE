@@ -33,13 +33,29 @@ interface AuthState {
   hasMinRole: (minRole: UserRole) => boolean
 }
 
+const getInitialAuthState = (): Pick<
+  AuthState,
+  'user' | 'isAuthenticated' | 'isInitialized'
+> => {
+  const accessToken = tokenStorage.getAccess()
+
+  if (!accessToken || !isTokenValid(accessToken)) {
+    return { user: null, isAuthenticated: false, isInitialized: true }
+  }
+
+  const user = getUserFromToken(accessToken)
+  return {
+    user,
+    isAuthenticated: user !== null,
+    isInitialized: true,
+  }
+}
+
 const useAuthStore = create<AuthState>()(
   devtools(
     (set, get) => ({
-      user: null,
+      ...getInitialAuthState(),
       profile: null,
-      isAuthenticated: false,
-      isInitialized: false,
 
       initializeFromToken: () => {
         const accessToken = tokenStorage.getAccess()

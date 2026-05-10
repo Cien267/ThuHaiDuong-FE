@@ -39,7 +39,7 @@ export interface TagSummary {
 // ── Pagination ─────────────────────────────────────────────────────────────────
 
 export interface PagedResult<T> {
-  items: T[]
+  data: T[]
   totalCount: number
   pageNumber: number
   pageSize: number

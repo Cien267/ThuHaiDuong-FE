@@ -110,12 +110,12 @@ export const CategoriesPage = () => {
         <div>
           <h1 className="text-2xl font-bold">Categories</h1>
           <p className="text-sm text-muted-foreground">
-            Manage story categories and sub-categories.
+            Quản lý danh mục và phân mục con.
           </p>
         </div>
-        <Button onClick={handleOpenCreate}>
-          <Plus className="mr-2 h-4 w-4" />
-          New Category
+        <Button variant="greenShiny" onClick={handleOpenCreate}>
+          <Plus className="h-4 w-4" />
+          Tạo mới
         </Button>
       </div>
 
@@ -123,8 +123,8 @@ export const CategoriesPage = () => {
       <div className="relative w-72">
         <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
         <Input
-          placeholder="Search categories..."
-          className="pl-8"
+          placeholder="Tìm kiếm danh mục..."
+          className="pl-8!"
           value={search}
           onChange={(e) => {
             setSearch(e.target.value)
@@ -138,12 +138,12 @@ export const CategoriesPage = () => {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Name</TableHead>
+              <TableHead>Tên</TableHead>
               <TableHead>Slug</TableHead>
-              <TableHead>Parent</TableHead>
-              <TableHead className="text-center">Sort</TableHead>
-              <TableHead className="text-center">Stories</TableHead>
-              <TableHead className="text-center">Status</TableHead>
+              <TableHead>Danh mục cha</TableHead>
+              <TableHead className="text-center">Thứ tự</TableHead>
+              <TableHead className="text-center">Truyện</TableHead>
+              <TableHead className="text-center">Trạng thái</TableHead>
               <TableHead className="w-10" />
             </TableRow>
           </TableHeader>
@@ -157,17 +157,17 @@ export const CategoriesPage = () => {
                   Loading...
                 </TableCell>
               </TableRow>
-            ) : data?.items.length === 0 ? (
+            ) : data?.data.length === 0 ? (
               <TableRow>
                 <TableCell
                   colSpan={7}
                   className="py-10 text-center text-muted-foreground"
                 >
-                  No categories found.
+                  Không tìm thấy danh mục nào.
                 </TableCell>
               </TableRow>
             ) : (
-              data?.items.map((cat: CategoryResult) => (
+              data?.data.map((cat: CategoryResult) => (
                 <TableRow key={cat.id}>
                   <TableCell className="font-medium">{cat.name}</TableCell>
                   <TableCell className="text-muted-foreground font-mono text-sm">
@@ -199,7 +199,7 @@ export const CategoriesPage = () => {
                           onClick={() => handleOpenEdit(cat.id)}
                         >
                           <Pencil className="mr-2 h-4 w-4" />
-                          Edit
+                          Chỉnh sửa
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           className="text-destructive"
@@ -207,7 +207,7 @@ export const CategoriesPage = () => {
                           disabled={cat.storyCount > 0}
                         >
                           <Trash2 className="mr-2 h-4 w-4" />
-                          Delete
+                          Xóa
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -228,10 +228,10 @@ export const CategoriesPage = () => {
             disabled={page === 1}
             onClick={() => setPage((p) => p - 1)}
           >
-            Previous
+            Trước
           </Button>
           <span className="text-sm text-muted-foreground">
-            Page {page} of {totalPages}
+            Trang {page} của {totalPages}
           </span>
           <Button
             variant="outline"
@@ -239,7 +239,7 @@ export const CategoriesPage = () => {
             disabled={page === totalPages}
             onClick={() => setPage((p) => p + 1)}
           >
-            Next
+            Tiếp theo
           </Button>
         </div>
       )}
@@ -255,7 +255,7 @@ export const CategoriesPage = () => {
         <DialogContent className="max-w-lg">
           <DialogHeader>
             <DialogTitle>
-              {editId ? 'Edit Category' : 'New Category'}
+              {editId ? 'Chỉnh sửa Danh Mục' : 'Tạo Danh Mục Mới'}
             </DialogTitle>
           </DialogHeader>
           {editId && isLoadingEdit ? (
@@ -279,14 +279,14 @@ export const CategoriesPage = () => {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Category?</AlertDialogTitle>
+            <AlertDialogTitle>Xóa danh mục?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. The category will be soft-deleted
-              and removed from all stories.
+              Hành động này không thể hoàn tác. Danh mục sẽ bị xóa mềm và bị
+              loại bỏ khỏi tất cả các truyện.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>Hủy</AlertDialogCancel>
             <AlertDialogAction
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
               onClick={handleDelete}

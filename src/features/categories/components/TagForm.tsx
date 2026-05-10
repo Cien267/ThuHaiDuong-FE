@@ -43,7 +43,7 @@ export const TagForm = ({ initialData, onSubmit, isLoading }: TagFormProps) => {
           render={({ field }) => (
             <FormItem>
               <FormLabel>
-                Name <span className="text-destructive">*</span>
+                Tên <span className="text-destructive">*</span>
               </FormLabel>
               <FormControl>
                 <Input placeholder="e.g. Xuyên Không" {...field} />
@@ -61,7 +61,7 @@ export const TagForm = ({ initialData, onSubmit, isLoading }: TagFormProps) => {
               <FormLabel>
                 Slug
                 <span className="ml-1 text-xs text-muted-foreground">
-                  (auto-generated if empty)
+                  (tự động tạo nếu để trống)
                 </span>
               </FormLabel>
               <FormControl>
@@ -73,8 +73,8 @@ export const TagForm = ({ initialData, onSubmit, isLoading }: TagFormProps) => {
         />
 
         <div className="flex justify-end pt-2">
-          <Button type="submit" disabled={isLoading}>
-            {isLoading ? 'Saving...' : initialData ? 'Update' : 'Create'}
+          <Button variant={'greenShiny'} type="submit" disabled={isLoading}>
+            {isLoading ? 'Đang lưu...' : initialData ? 'Cập nhật' : 'Tạo'}
           </Button>
         </div>
       </form>

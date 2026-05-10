@@ -84,7 +84,7 @@ export const CategoryForm = ({
           render={({ field }) => (
             <FormItem>
               <FormLabel>
-                Name <span className="text-destructive">*</span>
+                Tên <span className="text-destructive">*</span>
               </FormLabel>
               <FormControl>
                 <Input placeholder="e.g. Ngôn Tình" {...field} />
@@ -102,8 +102,8 @@ export const CategoryForm = ({
             <FormItem>
               <FormLabel>
                 Slug
-                <span className="ml-1 text-xs text-muted-foreground">
-                  (auto-generated if empty)
+                <span className="text-xs text-muted-foreground">
+                  (tự động tạo nếu để trống)
                 </span>
               </FormLabel>
               <FormControl>
@@ -120,7 +120,7 @@ export const CategoryForm = ({
           name="parentId"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Parent Category</FormLabel>
+              <FormLabel>Danh mục cha</FormLabel>
               <Select
                 onValueChange={(val) =>
                   field.onChange(val === 'none' ? undefined : val)
@@ -133,7 +133,9 @@ export const CategoryForm = ({
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="none">No parent (root)</SelectItem>
+                  <SelectItem value="none">
+                    Không có danh mục cha (root)
+                  </SelectItem>
                   {flatCategories
                     .filter((c) => c.id !== initialData?.id) // không cho chọn chính mình làm cha
                     .map((c) => (
@@ -155,10 +157,10 @@ export const CategoryForm = ({
           name="description"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Description</FormLabel>
+              <FormLabel>Mô tả</FormLabel>
               <FormControl>
                 <Textarea
-                  placeholder="Brief description..."
+                  placeholder="Mô tả ngắn..."
                   className="resize-none"
                   rows={3}
                   {...field}
@@ -175,7 +177,7 @@ export const CategoryForm = ({
           name="sortOrder"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Sort Order</FormLabel>
+              <FormLabel>Thứ tự</FormLabel>
               <FormControl>
                 <Input type="number" min={0} {...field} />
               </FormControl>
@@ -191,9 +193,9 @@ export const CategoryForm = ({
           render={({ field }) => (
             <FormItem className="flex items-center justify-between rounded-lg border p-3">
               <div>
-                <FormLabel>Active</FormLabel>
+                <FormLabel>Trạng thái</FormLabel>
                 <p className="text-xs text-muted-foreground">
-                  Inactive categories are hidden from the client site.
+                  Danh mục không hoạt động sẽ bị ẩn khỏi trang khách hàng.
                 </p>
               </div>
               <FormControl>
@@ -207,8 +209,8 @@ export const CategoryForm = ({
         />
 
         <div className="flex justify-end gap-2 pt-2">
-          <Button type="submit" disabled={isLoading}>
-            {isLoading ? 'Saving...' : initialData ? 'Update' : 'Create'}
+          <Button variant="greenShiny" type="submit" disabled={isLoading}>
+            {isLoading ? 'Đang lưu...' : initialData ? 'Cập nhật' : 'Tạo mới'}
           </Button>
         </div>
       </form>

@@ -105,12 +105,12 @@ export const TagsPage = () => {
         <div>
           <h1 className="text-2xl font-bold">Tags</h1>
           <p className="text-sm text-muted-foreground">
-            Manage story tags for flexible labeling.
+            Quản lý thẻ cho câu chuyện để phân loại linh hoạt.
           </p>
         </div>
-        <Button onClick={handleOpenCreate}>
+        <Button variant={'greenShiny'} onClick={handleOpenCreate}>
           <Plus className="mr-2 h-4 w-4" />
-          New Tag
+          Tạo thẻ mới
         </Button>
       </div>
 
@@ -119,7 +119,7 @@ export const TagsPage = () => {
         <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
         <Input
           placeholder="Search tags..."
-          className="pl-8"
+          className="pl-8!"
           value={search}
           onChange={(e) => {
             setSearch(e.target.value)
@@ -133,10 +133,10 @@ export const TagsPage = () => {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Name</TableHead>
+              <TableHead>Tên</TableHead>
               <TableHead>Slug</TableHead>
-              <TableHead className="text-center">Stories</TableHead>
-              <TableHead>Created</TableHead>
+              <TableHead className="text-center">Câu chuyện</TableHead>
+              <TableHead>Ngày tạo</TableHead>
               <TableHead className="w-10" />
             </TableRow>
           </TableHeader>
@@ -150,17 +150,17 @@ export const TagsPage = () => {
                   Loading...
                 </TableCell>
               </TableRow>
-            ) : data?.items.length === 0 ? (
+            ) : data?.data.length === 0 ? (
               <TableRow>
                 <TableCell
                   colSpan={5}
                   className="py-10 text-center text-muted-foreground"
                 >
-                  No tags found.
+                  Không tìm thấy thẻ nào.
                 </TableCell>
               </TableRow>
             ) : (
-              data?.items.map((tag: TagResult) => (
+              data?.data.map((tag: TagResult) => (
                 <TableRow key={tag.id}>
                   <TableCell className="font-medium">{tag.name}</TableCell>
                   <TableCell className="font-mono text-sm text-muted-foreground">
@@ -184,7 +184,7 @@ export const TagsPage = () => {
                           onClick={() => handleOpenEdit(tag.id)}
                         >
                           <Pencil className="mr-2 h-4 w-4" />
-                          Edit
+                          Chỉnh sửa
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           className="text-destructive"
@@ -192,7 +192,7 @@ export const TagsPage = () => {
                           disabled={tag.storyCount > 0}
                         >
                           <Trash2 className="mr-2 h-4 w-4" />
-                          Delete
+                          Xóa
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -213,10 +213,10 @@ export const TagsPage = () => {
             disabled={page === 1}
             onClick={() => setPage((p) => p - 1)}
           >
-            Previous
+            Trước
           </Button>
           <span className="text-sm text-muted-foreground">
-            Page {page} of {totalPages}
+            Trang {page} của {totalPages}
           </span>
           <Button
             variant="outline"
@@ -224,7 +224,7 @@ export const TagsPage = () => {
             disabled={page === totalPages}
             onClick={() => setPage((p) => p + 1)}
           >
-            Next
+            Tiếp theo
           </Button>
         </div>
       )}
@@ -239,7 +239,9 @@ export const TagsPage = () => {
       >
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle>{editId ? 'Edit Tag' : 'New Tag'}</DialogTitle>
+            <DialogTitle>
+              {editId ? 'Chỉnh sửa Tag' : 'Tạo Tag Mới'}
+            </DialogTitle>
           </DialogHeader>
           {editId && isLoadingEdit ? (
             <div className="py-8 text-center text-muted-foreground">
@@ -262,14 +264,14 @@ export const TagsPage = () => {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Tag?</AlertDialogTitle>
+            <AlertDialogTitle>Xóa thẻ?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. Tags with stories assigned cannot be
-              deleted.
+              Hành động này không thể hoàn tác. Các thẻ có câu chuyện gán không
+              thể bị xóa.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>Hủy</AlertDialogCancel>
             <AlertDialogAction
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
               onClick={handleDelete}
