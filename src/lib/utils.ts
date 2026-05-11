@@ -28,7 +28,7 @@ export function slugify(text: string): string {
     .replace(/-+$/, '')
 }
 
-export const formatDate = (date?: Date) => {
+export const formatDate = (date?: Date | string) => {
   if (!date) return '-'
-  return format(new Date(date), 'PPP')
+  return format(new Date(date), 'dd/MM/yyyy')
 }

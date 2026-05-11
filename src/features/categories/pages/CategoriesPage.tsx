@@ -183,7 +183,7 @@ export const CategoriesPage = () => {
                     {cat.storyCount}
                   </TableCell>
                   <TableCell className="text-center">
-                    <Badge variant={cat.isActive ? 'default' : 'secondary'}>
+                    <Badge variant={cat.isActive ? 'info' : 'secondary'}>
                       {cat.isActive ? 'Active' : 'Inactive'}
                     </Badge>
                   </TableCell>
@@ -288,7 +288,7 @@ export const CategoriesPage = () => {
           <AlertDialogFooter>
             <AlertDialogCancel>Hủy</AlertDialogCancel>
             <AlertDialogAction
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              className="bg-destructive text-destructive-foreground! hover:bg-destructive/90"
               onClick={handleDelete}
               disabled={deleteMutation.isPending}
             >

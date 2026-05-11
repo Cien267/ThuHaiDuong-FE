@@ -55,12 +55,10 @@ export const useCreateCategory = () => {
       // Invalidate cả list lẫn tree
       queryClient.invalidateQueries({ queryKey: categoryKeys.lists() })
       queryClient.invalidateQueries({ queryKey: categoryKeys.tree() })
-      toast.success('Category created successfully.')
+      toast.success('Tạo danh mục thành công.')
     },
     onError: (error: any) => {
-      toast.error(
-        error?.response?.data?.message ?? 'Failed to create category.'
-      )
+      toast.error(error?.response?.data?.message ?? 'Tạo danh mục thất bại.')
     },
   })
 }
@@ -74,11 +72,11 @@ export const useUpdateCategory = (id: string) => {
       queryClient.invalidateQueries({ queryKey: categoryKeys.lists() })
       queryClient.invalidateQueries({ queryKey: categoryKeys.tree() })
       queryClient.invalidateQueries({ queryKey: categoryKeys.detail(id) })
-      toast.success('Category updated successfully.')
+      toast.success('Cập nhật danh mục thành công.')
     },
     onError: (error: any) => {
       toast.error(
-        error?.response?.data?.message ?? 'Failed to update category.'
+        error?.response?.data?.message ?? 'Cập nhật danh mục thất bại.'
       )
     },
   })
@@ -92,12 +90,10 @@ export const useDeleteCategory = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: categoryKeys.lists() })
       queryClient.invalidateQueries({ queryKey: categoryKeys.tree() })
-      toast.success('Category deleted.')
+      toast.success('Xóa danh mục thành công.')
     },
     onError: (error: any) => {
-      toast.error(
-        error?.response?.data?.message ?? 'Failed to delete category.'
-      )
+      toast.error(error?.response?.data?.message ?? 'Xóa danh mục thất bại.')
     },
   })
 }
@@ -134,10 +130,10 @@ export const useCreateTag = () => {
     mutationFn: (data: TagFormValues) => tagService.create(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: tagKeys.lists() })
-      toast.success('Tag created successfully.')
+      toast.success('Tạo thẻ thành công.')
     },
     onError: (error: any) => {
-      toast.error(error?.response?.data?.message ?? 'Failed to create tag.')
+      toast.error(error?.response?.data?.message ?? 'Tạo thẻ thất bại.')
     },
   })
 }
@@ -150,10 +146,10 @@ export const useUpdateTag = (id: string) => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: tagKeys.lists() })
       queryClient.invalidateQueries({ queryKey: tagKeys.detail(id) })
-      toast.success('Tag updated successfully.')
+      toast.success('Cập nhật thẻ thành công.')
     },
     onError: (error: any) => {
-      toast.error(error?.response?.data?.message ?? 'Failed to update tag.')
+      toast.error(error?.response?.data?.message ?? 'Cập nhật thẻ thất bại.')
     },
   })
 }
@@ -165,10 +161,10 @@ export const useDeleteTag = () => {
     mutationFn: (id: string) => tagService.delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: tagKeys.lists() })
-      toast.success('Tag deleted.')
+      toast.success('Xóa thẻ thành công.')
     },
     onError: (error: any) => {
-      toast.error(error?.response?.data?.message ?? 'Failed to delete tag.')
+      toast.error(error?.response?.data?.message ?? 'Xóa thẻ thất bại.')
     },
   })
 }

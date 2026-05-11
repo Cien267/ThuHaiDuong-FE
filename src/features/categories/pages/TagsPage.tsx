@@ -43,6 +43,7 @@ import {
 } from '../hooks/useCategories'
 import type { TagResult, TagFormValues } from '../types/category.types'
 import { TAG_PAGE_SIZE } from '../constants/category.constants'
+import { formatDate } from '@/lib/utils'
 
 export const TagsPage = () => {
   const [search, setSearch] = useState('')
@@ -170,7 +171,7 @@ export const TagsPage = () => {
                     {tag.storyCount}
                   </TableCell>
                   <TableCell className="text-muted-foreground text-sm">
-                    {new Date(tag.createdAt).toLocaleDateString()}
+                    {formatDate(tag.createdAt)}
                   </TableCell>
                   <TableCell>
                     <DropdownMenu>
@@ -273,7 +274,7 @@ export const TagsPage = () => {
           <AlertDialogFooter>
             <AlertDialogCancel>Hủy</AlertDialogCancel>
             <AlertDialogAction
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              className="bg-destructive text-destructive-foreground! hover:bg-destructive/90"
               onClick={handleDelete}
               disabled={deleteMutation.isPending}
             >
