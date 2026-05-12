@@ -14,6 +14,7 @@ const CategoriesPage = lazy(
 )
 const TagsPage = lazy(() => import('@/features/categories/pages/TagsPage'))
 const UnauthorizedPage = lazy(() => import('@/pages/UnauthorizedPage'))
+const AuthorsPage = lazy(() => import('@/features/authors/pages/AuthorsPage'))
 
 export const router = createBrowserRouter([
   {
@@ -69,6 +70,14 @@ export const router = createBrowserRouter([
                 element: (
                   <SuspenseWrapper>
                     <TagsPage />
+                  </SuspenseWrapper>
+                ),
+              },
+              {
+                path: 'authors',
+                element: (
+                  <SuspenseWrapper>
+                    <AuthorsPage />
                   </SuspenseWrapper>
                 ),
               },
