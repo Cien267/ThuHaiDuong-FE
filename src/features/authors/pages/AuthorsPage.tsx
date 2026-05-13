@@ -53,10 +53,18 @@ import {
 import { COUNTRIES } from '../types/author.types'
 import { AUTHOR_PAGE_SIZE } from '../constants/author.constants'
 import type { AuthorFormValues } from '../types/author.types'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { formatDate } from '@/lib/utils'
 
 export const AuthorsPage = () => {
   const [search, setSearch] = useState('')
-  const [country, setCountry] = useState('')
+  const [country, setCountry] = useState('all')
   const [page, setPage] = useState(1)
   const [dialogOpen, setDialogOpen] = useState(false)
   const [deleteId, setDeleteId] = useState<string | null>(null)
@@ -134,9 +142,9 @@ export const AuthorsPage = () => {
             Manage story authors and their profiles.
           </p>
         </div>
-        <Button onClick={handleOpenCreate}>
+        <Button variant={'greenShiny'} onClick={handleOpenCreate}>
           <Plus className="mr-2 h-4 w-4" />
-          New Author
+          Tạo tác giả
         </Button>
       </div>
 
@@ -146,7 +154,7 @@ export const AuthorsPage = () => {
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Search by name or pen name..."
-            className="pl-8"
+            className="pl-8!"
             value={search}
             onChange={(e) => {
               setSearch(e.target.value)
@@ -156,21 +164,25 @@ export const AuthorsPage = () => {
         </div>
 
         {/* Country filter */}
-        <select
-          className="h-9 rounded-md border border-input bg-background px-3 text-sm"
-          value={country}
-          onChange={(e) => {
-            setCountry(e.target.value)
+        <Select
+          onValueChange={(e) => {
+            setCountry(e)
             setPage(1)
           }}
+          value={country}
         >
-          <option value="">All countries</option>
-          {COUNTRIES.map((c) => (
-            <option key={c.code} value={c.code}>
-              {c.label}
-            </option>
-          ))}
-        </select>
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Chọn quốc gia" />
+          </SelectTrigger>
+          <SelectContent className="w-full">
+            <SelectItem value="all">Tất cả quốc gia</SelectItem>
+            {COUNTRIES.map((country) => (
+              <SelectItem key={country.code} value={country.code}>
+                {country.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       {/* Table */}
@@ -178,17 +190,17 @@ export const AuthorsPage = () => {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Author</TableHead>
+              <TableHead>Tác giả</TableHead>
               <TableHead>Slug</TableHead>
-              <TableHead>Country</TableHead>
+              <TableHead>Quốc gia</TableHead>
               <TableHead className="text-center">
                 <div className="flex items-center justify-center gap-1">
                   <BookOpen className="h-3.5 w-3.5" />
-                  Stories
+                  Truyện
                 </div>
               </TableHead>
-              <TableHead className="text-center">Published</TableHead>
-              <TableHead>Created</TableHead>
+              <TableHead className="text-center">Đã xuất bản</TableHead>
+              <TableHead>Ngày tạo</TableHead>
               <TableHead className="w-10" />
             </TableRow>
           </TableHeader>
@@ -208,7 +220,7 @@ export const AuthorsPage = () => {
                   colSpan={7}
                   className="py-10 text-center text-muted-foreground"
                 >
-                  No authors found.
+                  Không tìm thấy tác giả nào.
                 </TableCell>
               </TableRow>
             ) : (
@@ -268,7 +280,7 @@ export const AuthorsPage = () => {
                   </TableCell>
 
                   <TableCell className="text-sm text-muted-foreground">
-                    {new Date(author.createdAt).toLocaleDateString()}
+                    {formatDate(author.createdAt)}
                   </TableCell>
 
                   <TableCell>
@@ -283,7 +295,7 @@ export const AuthorsPage = () => {
                           onClick={() => handleOpenEdit(author.id)}
                         >
                           <Pencil className="mr-2 h-4 w-4" />
-                          Edit
+                          Chỉnh sửa
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           className="text-destructive"
@@ -291,7 +303,7 @@ export const AuthorsPage = () => {
                           disabled={author.storyCount > 0}
                         >
                           <Trash2 className="mr-2 h-4 w-4" />
-                          {author.storyCount > 0 ? 'Has stories' : 'Delete'}
+                          {author.storyCount > 0 ? 'Có truyện' : 'Xóa'}
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -307,7 +319,7 @@ export const AuthorsPage = () => {
       {totalPages > 1 && (
         <div className="flex items-center justify-between">
           <p className="text-sm text-muted-foreground">
-            {data?.totalCount} authors total
+            {data?.totalCount} tổng số tác giả
           </p>
           <div className="flex items-center gap-2">
             <Button
@@ -316,10 +328,10 @@ export const AuthorsPage = () => {
               disabled={page === 1}
               onClick={() => setPage((p) => p - 1)}
             >
-              Previous
+              Trước
             </Button>
             <span className="text-sm text-muted-foreground">
-              Page {page} of {totalPages}
+              Trang {page} của {totalPages}
             </span>
             <Button
               variant="outline"
@@ -327,7 +339,7 @@ export const AuthorsPage = () => {
               disabled={page === totalPages}
               onClick={() => setPage((p) => p + 1)}
             >
-              Next
+              Tiếp theo
             </Button>
           </div>
         </div>
@@ -343,7 +355,9 @@ export const AuthorsPage = () => {
       >
         <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>{editId ? 'Edit Author' : 'New Author'}</DialogTitle>
+            <DialogTitle>
+              {editId ? 'Chỉnh sửa tác giả' : 'Tác giả mới'}
+            </DialogTitle>
           </DialogHeader>
           {editId && isLoadingEdit ? (
             <div className="py-8 text-center text-muted-foreground">
@@ -366,20 +380,20 @@ export const AuthorsPage = () => {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Author?</AlertDialogTitle>
+            <AlertDialogTitle>Xóa tác giả?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. Authors with stories assigned cannot
-              be deleted — reassign or delete their stories first.
+              Hành động này không thể hoàn tác. Các tác giả có truyện gán không
+              thể bị xóa — hãy gán lại hoặc xóa các truyện của họ trước.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>Hủy</AlertDialogCancel>
             <AlertDialogAction
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              className="bg-destructive text-destructive-foreground! hover:bg-destructive/90"
               onClick={handleDelete}
               disabled={deleteMutation.isPending}
             >
-              {deleteMutation.isPending ? 'Deleting...' : 'Delete'}
+              {deleteMutation.isPending ? 'Đang xóa...' : 'Xóa'}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

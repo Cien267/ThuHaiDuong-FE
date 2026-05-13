@@ -71,7 +71,7 @@ export const AuthorForm = ({
           render={({ field }) => (
             <FormItem>
               <FormLabel>
-                Name <span className="text-destructive">*</span>
+                Tên <span className="text-destructive">*</span>
               </FormLabel>
               <FormControl>
                 <Input placeholder="e.g. Tân Di Ổ" {...field} />
@@ -87,12 +87,7 @@ export const AuthorForm = ({
           name="penName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>
-                Pen Name
-                <span className="ml-1 text-xs text-muted-foreground">
-                  (bút danh)
-                </span>
-              </FormLabel>
+              <FormLabel>Bút danh</FormLabel>
               <FormControl>
                 <Input placeholder="e.g. 辛夷坞" {...field} />
               </FormControl>
@@ -110,7 +105,7 @@ export const AuthorForm = ({
               <FormLabel>
                 Slug
                 <span className="ml-1 text-xs text-muted-foreground">
-                  (auto-generated if empty)
+                  (tự động tạo nếu để trống)
                 </span>
               </FormLabel>
               <FormControl>
@@ -127,7 +122,7 @@ export const AuthorForm = ({
           name="country"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Country</FormLabel>
+              <FormLabel>Quốc gia</FormLabel>
               <Select
                 onValueChange={(val) =>
                   field.onChange(val === 'none' ? '' : val)
@@ -136,11 +131,11 @@ export const AuthorForm = ({
               >
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select country..." />
+                    <SelectValue placeholder="Chọn quốc gia..." />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="none">— Unknown —</SelectItem>
+                  <SelectItem value="none">— Không xác định —</SelectItem>
                   {COUNTRIES.map((c) => (
                     <SelectItem key={c.code} value={c.code}>
                       {c.label}
@@ -183,7 +178,7 @@ export const AuthorForm = ({
           name="description"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Description</FormLabel>
+              <FormLabel>Mô tả</FormLabel>
               <FormControl>
                 <Textarea
                   placeholder="Brief bio..."
@@ -198,8 +193,8 @@ export const AuthorForm = ({
         />
 
         <div className="flex justify-end pt-2">
-          <Button type="submit" disabled={isLoading}>
-            {isLoading ? 'Saving...' : initialData ? 'Update' : 'Create'}
+          <Button variant={'greenShiny'} type="submit" disabled={isLoading}>
+            {isLoading ? 'Đang lưu...' : initialData ? 'Cập nhật' : 'Tạo mới'}
           </Button>
         </div>
       </form>
