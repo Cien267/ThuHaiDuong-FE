@@ -15,6 +15,13 @@ const CategoriesPage = lazy(
 const TagsPage = lazy(() => import('@/features/categories/pages/TagsPage'))
 const UnauthorizedPage = lazy(() => import('@/pages/UnauthorizedPage'))
 const AuthorsPage = lazy(() => import('@/features/authors/pages/AuthorsPage'))
+const StoriesPage = lazy(() => import('@/features/stories/pages/StoriesPage'))
+const CreateStoryPage = lazy(
+  () => import('@/features/stories/pages/CreateStoryPage')
+)
+const EditStoryPage = lazy(
+  () => import('@/features/stories/pages/EditStoryPage')
+)
 
 export const router = createBrowserRouter([
   {
@@ -78,6 +85,30 @@ export const router = createBrowserRouter([
                 element: (
                   <SuspenseWrapper>
                     <AuthorsPage />
+                  </SuspenseWrapper>
+                ),
+              },
+              {
+                path: 'stories',
+                element: (
+                  <SuspenseWrapper>
+                    <StoriesPage />
+                  </SuspenseWrapper>
+                ),
+              },
+              {
+                path: 'stories/create',
+                element: (
+                  <SuspenseWrapper>
+                    <CreateStoryPage />
+                  </SuspenseWrapper>
+                ),
+              },
+              {
+                path: 'stories/update',
+                element: (
+                  <SuspenseWrapper>
+                    <EditStoryPage />
                   </SuspenseWrapper>
                 ),
               },
