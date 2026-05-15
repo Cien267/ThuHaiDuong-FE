@@ -108,7 +108,7 @@ export const CategoriesPage = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Categories</h1>
+          <h1 className="text-2xl font-bold">Danh mục</h1>
           <p className="text-sm text-muted-foreground">
             Quản lý danh mục và phân mục con.
           </p>

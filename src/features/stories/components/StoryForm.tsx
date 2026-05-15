@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
@@ -27,7 +27,7 @@ import {
   RELEASE_SCHEDULE,
   CONTENT_SOURCE,
 } from '../types/story.types'
-import { useAuthorSummaryList } from '@/features/authors/hooks/useAuthors'
+import { useAuthorList } from '@/features/authors/hooks/useAuthors'
 import { useCategoryTree } from '@/features/categories/hooks/useCategories'
 import { useTagList } from '@/features/categories/hooks/useCategories'
 import type { StoryFormValues, StoryAdminResult } from '../types/story.types'
@@ -43,10 +43,8 @@ export const StoryForm = ({
   onSubmit,
   isLoading,
 }: StoryFormProps) => {
-  const [authorSearch, setAuthorSearch] = useState('')
-
   // ── Remote data ───────────────────────────────────────────────────────────────
-  const { data: authorData } = useAuthorSummaryList(authorSearch || undefined)
+  const { data: authorData } = useAuthorList({})
   const { data: categoryTree } = useCategoryTree()
   const { data: tagData } = useTagList({ pageSize: 200 })
 
@@ -137,10 +135,10 @@ export const StoryForm = ({
             render={({ field }) => (
               <FormItem className="md:col-span-2">
                 <FormLabel>
-                  Title <span className="text-destructive">*</span>
+                  Tiêu đề <span className="text-destructive">*</span>
                 </FormLabel>
                 <FormControl>
-                  <Input placeholder="e.g. Gả Cho Kẻ Thù" {...field} />
+                  <Input placeholder="Ví dụ: Gả Cho Kẻ Thù" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -156,7 +154,7 @@ export const StoryForm = ({
                 <FormLabel>
                   Slug
                   <span className="ml-1 text-xs text-muted-foreground">
-                    (auto if empty)
+                    (tự động nếu để trống)
                   </span>
                 </FormLabel>
                 <FormControl>
@@ -184,45 +182,41 @@ export const StoryForm = ({
         </div>
 
         {/* ── Author ─────────────────────────────────────────────────────────── */}
-        <FormField
-          control={form.control}
-          name="authorId"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>
-                Author <span className="text-destructive">*</span>
-              </FormLabel>
-              <div className="space-y-1">
-                <Input
-                  placeholder="Search author..."
-                  value={authorSearch}
-                  onChange={(e) => setAuthorSearch(e.target.value)}
-                  className="mb-1"
-                />
-                <Select onValueChange={field.onChange} value={field.value}>
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select author..." />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {authors.map((a) => (
-                      <SelectItem key={a.id} value={a.id}>
-                        {a.name}
-                        {a.penName && (
-                          <span className="ml-1 text-xs text-muted-foreground">
-                            ({a.penName})
-                          </span>
-                        )}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <FormField
+            control={form.control}
+            name="authorId"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>
+                  Tác giả <span className="text-destructive">*</span>
+                </FormLabel>
+                <div className="space-y-1">
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <FormControl>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select author..." />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {authors.map((a) => (
+                        <SelectItem key={a.id} value={a.id}>
+                          {a.name}
+                          {a.penName && (
+                            <span className="ml-1 text-xs text-muted-foreground">
+                              ({a.penName})
+                            </span>
+                          )}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
 
         {/* ── Cover image ─────────────────────────────────────────────────────── */}
         <FormField
@@ -259,10 +253,10 @@ export const StoryForm = ({
           name="description"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Description</FormLabel>
+              <FormLabel>Mô tả</FormLabel>
               <FormControl>
                 <Textarea
-                  placeholder="Story synopsis..."
+                  placeholder="Tóm tắt truyện..."
                   className="min-h-[120px] resize-y"
                   {...field}
                 />
@@ -279,19 +273,19 @@ export const StoryForm = ({
             name="storyType"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Story Type</FormLabel>
+                <FormLabel>Thể loại truyện</FormLabel>
                 <Select onValueChange={field.onChange} value={field.value}>
                   <FormControl>
-                    <SelectTrigger>
+                    <SelectTrigger className="w-full">
                       <SelectValue />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
                     <SelectItem value={STORY_TYPE.Completed}>
-                      Completed
+                      Hoàn thành
                     </SelectItem>
                     <SelectItem value={STORY_TYPE.Serial}>
-                      Serial (ongoing)
+                      Đang tiến hành
                     </SelectItem>
                   </SelectContent>
                 </Select>
@@ -309,30 +303,29 @@ export const StoryForm = ({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
-                      Release Schedule{' '}
-                      <span className="text-destructive">*</span>
+                      Lịch phát hành <span className="text-destructive">*</span>
                     </FormLabel>
                     <Select
                       onValueChange={field.onChange}
                       value={field.value ?? ''}
                     >
                       <FormControl>
-                        <SelectTrigger>
+                        <SelectTrigger className="w-full">
                           <SelectValue placeholder="Select..." />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
                         <SelectItem value={RELEASE_SCHEDULE.Daily}>
-                          Daily
+                          Hàng ngày
                         </SelectItem>
                         <SelectItem value={RELEASE_SCHEDULE.Weekly}>
-                          Weekly
+                          Hàng tuần
                         </SelectItem>
                         <SelectItem value={RELEASE_SCHEDULE.BiWeekly}>
-                          Bi-weekly
+                          Hai tuần một lần
                         </SelectItem>
                         <SelectItem value={RELEASE_SCHEDULE.Monthly}>
-                          Monthly
+                          Hàng tháng
                         </SelectItem>
                       </SelectContent>
                     </Select>
@@ -346,7 +339,9 @@ export const StoryForm = ({
                 name="nextChapterAt"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Next Chapter At</FormLabel>
+                    <FormLabel className="w-full">
+                      Thời điểm phát hành chương sau
+                    </FormLabel>
                     <FormControl>
                       <Input type="datetime-local" {...field} />
                     </FormControl>
@@ -363,21 +358,23 @@ export const StoryForm = ({
             name="contentSource"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Content Source</FormLabel>
+                <FormLabel>Nguồn nội dung</FormLabel>
                 <Select onValueChange={field.onChange} value={field.value}>
                   <FormControl>
-                    <SelectTrigger>
+                    <SelectTrigger className="w-full">
                       <SelectValue />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
                     <SelectItem value={CONTENT_SOURCE.Manual}>
-                      Manual
+                      Thủ công
                     </SelectItem>
                     <SelectItem value={CONTENT_SOURCE.Crawled}>
-                      Crawled
+                      Thu thập
                     </SelectItem>
-                    <SelectItem value={CONTENT_SOURCE.UGC}>UGC</SelectItem>
+                    <SelectItem value={CONTENT_SOURCE.UGC}>
+                      Nội dung do người dùng tạo
+                    </SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -392,7 +389,7 @@ export const StoryForm = ({
           name="categoryIds"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Categories</FormLabel>
+              <FormLabel>Danh mục</FormLabel>
               <Select
                 onValueChange={(val) => {
                   if (!field.value.includes(val))
@@ -400,8 +397,8 @@ export const StoryForm = ({
                 }}
               >
                 <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Add category..." />
+                  <SelectTrigger className="w-1/2">
+                    <SelectValue placeholder="Thêm danh mục..." />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
@@ -447,7 +444,7 @@ export const StoryForm = ({
           name="tagIds"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Tags</FormLabel>
+              <FormLabel>Thẻ</FormLabel>
               <Select
                 onValueChange={(val) => {
                   if (!field.value.includes(val))
@@ -455,8 +452,8 @@ export const StoryForm = ({
                 }}
               >
                 <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Add tag..." />
+                  <SelectTrigger className="w-1/2">
+                    <SelectValue placeholder="Thêm thẻ..." />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
@@ -495,20 +492,20 @@ export const StoryForm = ({
         />
 
         {/* ── Actions ─────────────────────────────────────────────────────────── */}
-        <div className="flex justify-end gap-2 pt-2 border-t">
+        <div className="flex justify-end gap-2 pt-4">
           <Button
             type="button"
             variant="outline"
             onClick={() => window.history.back()}
           >
-            Cancel
+            Hủy
           </Button>
-          <Button type="submit" disabled={isLoading}>
+          <Button variant="greenShiny" type="submit" disabled={isLoading}>
             {isLoading
-              ? 'Saving...'
+              ? 'Đang lưu...'
               : initialData
-                ? 'Update Story'
-                : 'Create Story'}
+                ? 'Cập nhật truyện'
+                : 'Tạo truyện'}
           </Button>
         </div>
       </form>

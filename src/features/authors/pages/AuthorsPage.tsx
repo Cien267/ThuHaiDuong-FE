@@ -137,9 +137,9 @@ export const AuthorsPage = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Authors</h1>
+          <h1 className="text-2xl font-bold">Tác giả</h1>
           <p className="text-sm text-muted-foreground">
-            Manage story authors and their profiles.
+            Quản lý tác giả và hồ sơ của họ.
           </p>
         </div>
         <Button variant={'greenShiny'} onClick={handleOpenCreate}>
@@ -171,10 +171,10 @@ export const AuthorsPage = () => {
           }}
           value={country}
         >
-          <SelectTrigger className="w-full">
+          <SelectTrigger>
             <SelectValue placeholder="Chọn quốc gia" />
           </SelectTrigger>
-          <SelectContent className="w-full">
+          <SelectContent>
             <SelectItem value="all">Tất cả quốc gia</SelectItem>
             {COUNTRIES.map((country) => (
               <SelectItem key={country.code} value={country.code}>

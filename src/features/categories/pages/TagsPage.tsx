@@ -104,7 +104,7 @@ export const TagsPage = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Tags</h1>
+          <h1 className="text-2xl font-bold">Thẻ</h1>
           <p className="text-sm text-muted-foreground">
             Quản lý thẻ cho câu chuyện để phân loại linh hoạt.
           </p>

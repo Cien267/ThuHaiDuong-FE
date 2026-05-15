@@ -10,6 +10,16 @@ export const STORY_STATUS = {
   Paused: 'Paused',
 } as const
 
+export const STORY_STATUS_OPTIONS = [
+  { value: STORY_STATUS.Draft, label: 'Nháp' },
+  { value: STORY_STATUS.PendingReview, label: 'Đang chờ duyệt' },
+  { value: STORY_STATUS.Approved, label: 'Đã duyệt' },
+  { value: STORY_STATUS.Rejected, label: 'Bị từ chối' },
+  { value: STORY_STATUS.Publishing, label: 'Đang xuất bản' },
+  { value: STORY_STATUS.Completed, label: 'Đã hoàn thành' },
+  { value: STORY_STATUS.Paused, label: 'Tạm dừng' },
+]
+
 export type StoryStatus = (typeof STORY_STATUS)[keyof typeof STORY_STATUS]
 
 export const STORY_TYPE = {

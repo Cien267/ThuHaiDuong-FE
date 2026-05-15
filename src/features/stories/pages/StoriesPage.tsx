@@ -29,6 +29,13 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import {
   MoreHorizontal,
   Plus,
   Search,
@@ -51,7 +58,7 @@ import {
   useDeleteStory,
 } from '../hooks/useStories'
 import useAuthStore from '@/store/authStore'
-import { STORY_STATUS } from '../types/story.types'
+import { STORY_STATUS_OPTIONS } from '../types/story.types'
 import { STORY_PAGE_SIZE } from '../constants/story.constants'
 import type { StoryAdminResult, StoryStatus } from '../types/story.types'
 
@@ -94,16 +101,19 @@ export const StoriesPage = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Stories</h1>
+          <h1 className="text-2xl font-bold">Truyện</h1>
           <p className="text-sm text-muted-foreground">
             {isContributor
-              ? 'Manage your stories.'
-              : 'Manage all stories on the platform.'}
+              ? 'Quản lý truyện của bạn.'
+              : 'Quản lý tất cả truyện trên nền tảng.'}
           </p>
         </div>
-        <Button onClick={() => navigate('/content/stories/create')}>
+        <Button
+          variant={'greenShiny'}
+          onClick={() => navigate('/content/stories/create')}
+        >
           <Plus className="mr-2 h-4 w-4" />
-          New Story
+          Tạo truyện mới
         </Button>
       </div>
 
@@ -112,8 +122,8 @@ export const StoriesPage = () => {
         <div className="relative w-72">
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Search title or author..."
-            className="pl-8"
+            placeholder="Tìm kiếm..."
+            className="pl-8!"
             value={keyword}
             onChange={(e) => {
               setKeyword(e.target.value)
@@ -121,22 +131,25 @@ export const StoriesPage = () => {
             }}
           />
         </div>
-
-        <select
-          className="h-9 rounded-md border border-input bg-background px-3 text-sm"
-          value={statusFilter}
-          onChange={(e) => {
-            setStatusFilter(e.target.value as StoryStatus | '')
+        <Select
+          onValueChange={(e) => {
+            setStatusFilter(e as StoryStatus | '')
             setPage(1)
           }}
+          value={statusFilter}
         >
-          <option value="">All statuses</option>
-          {Object.values(STORY_STATUS).map((s) => (
-            <option key={s} value={s}>
-              {s}
-            </option>
-          ))}
-        </select>
+          <SelectTrigger>
+            <SelectValue placeholder="Chọn trạng thái" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Tất cả trạng thái</SelectItem>
+            {STORY_STATUS_OPTIONS.map((s) => (
+              <SelectItem key={s.value} value={s.value}>
+                {s.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       {/* Table */}
@@ -144,17 +157,17 @@ export const StoriesPage = () => {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Story</TableHead>
-              <TableHead>Author</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Type</TableHead>
+              <TableHead>Truyện</TableHead>
+              <TableHead>Tác giả</TableHead>
+              <TableHead>Trạng thái</TableHead>
+              <TableHead>Loại</TableHead>
               <TableHead className="text-center">
                 <div className="flex items-center justify-center gap-1">
                   <BookOpen className="h-3.5 w-3.5" /> Ch.
                 </div>
               </TableHead>
-              <TableHead className="text-center">Views</TableHead>
-              <TableHead>Updated</TableHead>
+              <TableHead className="text-center">Lượt xem</TableHead>
+              <TableHead>Cập nhật</TableHead>
               <TableHead className="w-10" />
             </TableRow>
           </TableHeader>
@@ -174,7 +187,7 @@ export const StoriesPage = () => {
                   colSpan={8}
                   className="py-10 text-center text-muted-foreground"
                 >
-                  No stories found.
+                  Không tìm thấy truyện nào.
                 </TableCell>
               </TableRow>
             ) : (
@@ -220,9 +233,7 @@ export const StoriesPage = () => {
                         <div className="group relative inline-block">
                           <StoryStatusBadge status={story.status} />
                           <div className="absolute z-10 hidden group-hover:block bottom-full mb-1 left-0 w-64 rounded bg-popover border p-2 text-xs shadow-md">
-                            <p className="font-medium mb-1">
-                              Rejection reason:
-                            </p>
+                            <p className="font-medium mb-1">Lý do từ chối:</p>
                             <p className="text-muted-foreground">
                               {story.rejectionReason}
                             </p>
@@ -271,7 +282,7 @@ export const StoriesPage = () => {
                             }
                           >
                             <Eye className="mr-2 h-4 w-4" />
-                            View Detail
+                            Xem chi tiết
                           </DropdownMenuItem>
 
                           {/* Edit — chỉ khi Draft/Rejected và có quyền */}
@@ -282,7 +293,7 @@ export const StoriesPage = () => {
                               }
                             >
                               <Pencil className="mr-2 h-4 w-4" />
-                              Edit
+                              Chỉnh sửa
                             </DropdownMenuItem>
                           )}
 
@@ -299,7 +310,7 @@ export const StoriesPage = () => {
                                 onClick={() => setStatusStory(story)}
                               >
                                 <CheckCircle className="mr-2 h-4 w-4" />
-                                Update Status
+                                Cập nhật trạng thái
                               </DropdownMenuItem>
                             </>
                           )}
@@ -312,7 +323,7 @@ export const StoriesPage = () => {
                                 onClick={() => setReviewStory(story)}
                               >
                                 <CheckCircle className="mr-2 h-4 w-4" />
-                                Review
+                                Xem xét
                               </DropdownMenuItem>
                             </>
                           )}
@@ -328,7 +339,7 @@ export const StoriesPage = () => {
                                 onClick={() => setDeleteId(story.id)}
                               >
                                 <Trash2 className="mr-2 h-4 w-4" />
-                                Delete
+                                Xóa
                               </DropdownMenuItem>
                             </>
                           )}
@@ -347,7 +358,7 @@ export const StoriesPage = () => {
       {totalPages > 1 && (
         <div className="flex items-center justify-between">
           <p className="text-sm text-muted-foreground">
-            {data?.totalCount} stories total
+            {data?.totalCount} tổng số truyện
           </p>
           <div className="flex items-center gap-2">
             <Button
@@ -356,10 +367,10 @@ export const StoriesPage = () => {
               disabled={page === 1}
               onClick={() => setPage((p) => p - 1)}
             >
-              Previous
+              Trước
             </Button>
             <span className="text-sm text-muted-foreground">
-              Page {page} of {totalPages}
+              Trang {page} của {totalPages}
             </span>
             <Button
               variant="outline"
@@ -367,7 +378,7 @@ export const StoriesPage = () => {
               disabled={page === totalPages}
               onClick={() => setPage((p) => p + 1)}
             >
-              Next
+              Tiếp theo
             </Button>
           </div>
         </div>
@@ -408,20 +419,20 @@ export const StoriesPage = () => {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Story?</AlertDialogTitle>
+            <AlertDialogTitle>Xóa truyện?</AlertDialogTitle>
             <AlertDialogDescription>
-              This will soft-delete the story and all its chapters. This action
-              cannot be undone.
+              Hành động này sẽ xóa tạm thời truyện và tất cả các chương của nó.
+              Hành động này không thể hoàn tác.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>Hủy</AlertDialogCancel>
             <AlertDialogAction
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
               onClick={() => deleteId && deleteMutation.mutate(deleteId)}
               disabled={deleteMutation.isPending}
             >
-              {deleteMutation.isPending ? 'Deleting...' : 'Delete'}
+              {deleteMutation.isPending ? 'Đang xóa...' : 'Xóa'}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

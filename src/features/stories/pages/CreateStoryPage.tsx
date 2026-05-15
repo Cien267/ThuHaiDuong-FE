@@ -10,15 +10,15 @@ export const CreateStoryPage = () => {
   }
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6">
+    <div className="max-w-full mx-auto space-y-6">
       <div>
-        <h1 className="text-2xl font-bold">New Story</h1>
+        <h1 className="text-2xl font-bold">Tạo truyện mới</h1>
         <p className="text-sm text-muted-foreground">
-          Story will be saved as Draft. Submit for review when ready.
+          Truyện sẽ được lưu dưới dạng Nháp. Gửi để xem xét khi đã sẵn sàng.
         </p>
       </div>
 
-      <div className="rounded-lg border bg-card p-6">
+      <div className="rounded-lg bg-card p-6">
         <StoryForm
           onSubmit={handleSubmit}
           isLoading={createMutation.isPending}
