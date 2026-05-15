@@ -83,17 +83,11 @@ export const StoriesPage = () => {
   })
 
   // ── Mutations ─────────────────────────────────────────────────────────────────
-  const submitMutation = useSubmitForReview('') // id passed per-call
-  const updateStatusMutation = useUpdateStoryStatus('')
-  const reviewMutation = useReviewStory('')
+  const updateStatusMutation = useUpdateStoryStatus(statusStory?.id ?? '')
+  const reviewMutation = useReviewStory(reviewStory?.id ?? '')
   const deleteMutation = useDeleteStory()
 
   const totalPages = data ? Math.ceil(data.totalCount / STORY_PAGE_SIZE) : 1
-
-  // ── Handlers ──────────────────────────────────────────────────────────────────
-  const handleSubmitReview = async (id: string) => {
-    await useSubmitForReview(id).mutateAsync()
-  }
 
   return (
     <div className="space-y-4">
@@ -387,7 +381,7 @@ export const StoriesPage = () => {
           currentStatus={statusStory.status}
           isLoading={updateStatusMutation.isPending}
           onSubmit={async (status) => {
-            await useUpdateStoryStatus(statusStory.id).mutateAsync({ status })
+            await updateStatusMutation.mutateAsync({ status })
             setStatusStory(null)
           }}
         />
@@ -401,7 +395,7 @@ export const StoriesPage = () => {
           storyTitle={reviewStory.title}
           isLoading={reviewMutation.isPending}
           onSubmit={async (values) => {
-            await useReviewStory(reviewStory.id).mutateAsync(values)
+            await reviewMutation.mutateAsync(values)
             setReviewStory(null)
           }}
         />
