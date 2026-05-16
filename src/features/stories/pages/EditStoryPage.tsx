@@ -27,10 +27,10 @@ export const EditStoryPage = () => {
     return (
       <div className="max-w-3xl mx-auto">
         <div className="rounded-lg border bg-muted/50 p-8 text-center">
-          <p className="font-medium">Cannot edit this story.</p>
+          <p className="font-medium">Không thể chỉnh sửa câu chuyện này.</p>
           <p className="text-sm text-muted-foreground mt-1">
-            Stories can only be edited when in Draft or Rejected status. Current
-            status: <strong>{story.status}</strong>
+            Câu chuyện chỉ có thể được chỉnh sửa khi ở trạng thái Nháp hoặc Bị
+            từ chối. Trạng thái hiện tại: <strong>{story.status}</strong>
           </p>
         </div>
       </div>
@@ -47,13 +47,13 @@ export const EditStoryPage = () => {
   }
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6">
+    <div className="max-w-full mx-auto space-y-6">
       <div>
         <h1 className="text-2xl font-bold">Edit Story</h1>
         <p className="text-sm text-muted-foreground truncate">{story.title}</p>
       </div>
 
-      <div className="rounded-lg border bg-card p-6">
+      <div className="rounded-lg bg-card p-6">
         <StoryForm
           initialData={story}
           onSubmit={handleSubmit}

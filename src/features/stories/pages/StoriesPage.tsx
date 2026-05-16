@@ -278,7 +278,7 @@ export const StoriesPage = () => {
                           {/* View detail */}
                           <DropdownMenuItem
                             onClick={() =>
-                              navigate(`/admin/stories/${story.id}`)
+                              navigate(`/content/stories/${story.id}`)
                             }
                           >
                             <Eye className="mr-2 h-4 w-4" />
@@ -289,7 +289,7 @@ export const StoriesPage = () => {
                           {canEdit && isDraftOrRejected && (
                             <DropdownMenuItem
                               onClick={() =>
-                                navigate(`/admin/stories/${story.id}/edit`)
+                                navigate(`/content/stories/${story.id}/edit`)
                               }
                             >
                               <Pencil className="mr-2 h-4 w-4" />
@@ -428,7 +428,7 @@ export const StoriesPage = () => {
           <AlertDialogFooter>
             <AlertDialogCancel>Hủy</AlertDialogCancel>
             <AlertDialogAction
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              className="bg-destructive text-destructive-foreground! hover:bg-destructive/90"
               onClick={() => deleteId && deleteMutation.mutate(deleteId)}
               disabled={deleteMutation.isPending}
             >

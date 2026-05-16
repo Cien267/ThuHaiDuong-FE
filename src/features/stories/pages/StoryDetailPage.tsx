@@ -75,7 +75,7 @@ export const StoryDetailPage = () => {
     )
   }
 
-  if (!story) return <Navigate to="/admin/stories" replace />
+  if (!story) return <Navigate to="/content/stories" replace />
 
   // ── Permissions ───────────────────────────────────────────────────────────────
   const isOwner = story.uploadedByUserId === user?.id
@@ -123,7 +123,7 @@ export const StoryDetailPage = () => {
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => navigate('/admin/stories')}
+            onClick={() => navigate('/content/stories')}
           >
             <ArrowLeft className="h-4 w-4" />
           </Button>
@@ -147,7 +147,7 @@ export const StoryDetailPage = () => {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => navigate(`/admin/stories/${id}/edit`)}
+              onClick={() => navigate(`/content/stories/${id}/edit`)}
             >
               <Pencil className="mr-2 h-4 w-4" />
               Edit
@@ -289,7 +289,9 @@ export const StoryDetailPage = () => {
               <Button
                 size="sm"
                 variant="outline"
-                onClick={() => navigate(`/admin/stories/${id}/chapters/create`)}
+                onClick={() =>
+                  navigate(`/content/stories/${id}/chapters/create`)
+                }
               >
                 + Add Chapter
               </Button>
@@ -314,7 +316,7 @@ export const StoryDetailPage = () => {
                       <TableRow
                         key={ch.id}
                         className="cursor-pointer"
-                        onClick={() => navigate(`/admin/chapters/${ch.id}`)}
+                        onClick={() => navigate(`/content/chapters/${ch.id}`)}
                       >
                         <TableCell className="text-muted-foreground font-mono">
                           {ch.chapterNumber}
@@ -499,3 +501,5 @@ const MetaRow = ({
     <span className="font-medium text-right">{children}</span>
   </div>
 )
+
+export default StoryDetailPage

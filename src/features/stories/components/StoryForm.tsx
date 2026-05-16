@@ -31,6 +31,7 @@ import { useAuthorList } from '@/features/authors/hooks/useAuthors'
 import { useCategoryTree } from '@/features/categories/hooks/useCategories'
 import { useTagList } from '@/features/categories/hooks/useCategories'
 import type { StoryFormValues, StoryAdminResult } from '../types/story.types'
+import { DatePicker } from '@/components/common/DatePicker'
 
 interface StoryFormProps {
   initialData?: StoryAdminResult
@@ -343,7 +344,11 @@ export const StoryForm = ({
                       Thời điểm phát hành chương sau
                     </FormLabel>
                     <FormControl>
-                      <Input type="datetime-local" {...field} />
+                      <DatePicker
+                        value={field.value ? new Date(field.value) : undefined}
+                        onChange={field.onChange}
+                        placeholder="Pick a date"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

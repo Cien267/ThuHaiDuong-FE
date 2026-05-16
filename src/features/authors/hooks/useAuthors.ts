@@ -43,7 +43,7 @@ export const useCreateAuthor = () => {
       toast.success('Author created successfully.')
     },
     onError: (error: any) => {
-      toast.error(error?.response?.data?.message ?? 'Failed to create author.')
+      toast.error(error?.message ?? 'Failed to create author.')
     },
   })
 }
@@ -59,7 +59,7 @@ export const useUpdateAuthor = (id: string) => {
       toast.success('Author updated successfully.')
     },
     onError: (error: any) => {
-      toast.error(error?.response?.data?.message ?? 'Failed to update author.')
+      toast.error(error?.message ?? 'Failed to update author.')
     },
   })
 }
@@ -74,7 +74,7 @@ export const useDeleteAuthor = () => {
       toast.success('Author deleted.')
     },
     onError: (error: any) => {
-      toast.error(error?.response?.data?.message ?? 'Failed to delete author.')
+      toast.error(error?.message ?? 'Failed to delete author.')
     },
   })
 }

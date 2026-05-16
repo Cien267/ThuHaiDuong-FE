@@ -54,9 +54,7 @@ export const useAuth = () => {
       navigate('/home')
     },
     onError: (error: any) => {
-      toast.error(
-        error?.response?.data?.message ?? 'Login failed. Please try again.'
-      )
+      toast.error(error?.message ?? 'Login failed. Please try again.')
     },
   })
 
@@ -79,7 +77,7 @@ export const useAuth = () => {
       toast.success('Profile updated successfully.')
     },
     onError: (error: any) => {
-      toast.error(error?.response?.data?.message ?? 'Failed to update profile.')
+      toast.error(error?.message ?? 'Failed to update profile.')
     },
   })
 
@@ -91,9 +89,7 @@ export const useAuth = () => {
       toast.success('Username updated successfully.')
     },
     onError: (error: any) => {
-      toast.error(
-        error?.response?.data?.message ?? 'Failed to update username.'
-      )
+      toast.error(error?.message ?? 'Failed to update username.')
     },
   })
 
@@ -108,9 +104,7 @@ export const useAuth = () => {
       }, 3000)
     },
     onError: (error: any) => {
-      toast.error(
-        error?.response?.data?.message ?? 'Failed to change password.'
-      )
+      toast.error(error?.message ?? 'Failed to change password.')
     },
   })
 

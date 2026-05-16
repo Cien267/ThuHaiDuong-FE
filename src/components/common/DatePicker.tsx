@@ -1,7 +1,6 @@
 import { useState } from 'react'
-import { format } from 'date-fns'
 import { CalendarIcon } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { cn, formatDate } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import {
@@ -68,7 +67,7 @@ export const DatePicker = ({
           )}
         >
           {value && !isNaN(value.getTime()) ? (
-            format(value, 'PPP')
+            formatDate(value)
           ) : (
             <span>{placeholder}</span>
           )}

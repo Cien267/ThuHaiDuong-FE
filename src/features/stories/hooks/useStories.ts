@@ -62,12 +62,12 @@ export const useCreateStory = () => {
     mutationFn: (data: StoryFormValues) => storyService.create(data),
     onSuccess: (result) => {
       queryClient.invalidateQueries({ queryKey: storyKeys.lists() })
-      toast.success('Story created successfully.')
+      toast.success('Đã tạo truyện thành công.')
       // Redirect sang trang detail để thêm chapter luôn
-      navigate(`/admin/stories/${result.id}`)
+      navigate(`/content/stories/${result.id}`)
     },
     onError: (error: any) => {
-      toast.error(error?.response?.data?.message ?? 'Failed to create story.')
+      toast.error(error?.message ?? 'Failed to create story.')
     },
   })
 }
@@ -83,11 +83,11 @@ export const useUpdateStory = (id: string) => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: storyKeys.lists() })
       queryClient.invalidateQueries({ queryKey: storyKeys.detail(id) })
-      toast.success('Story updated successfully.')
-      navigate(`/admin/stories/${id}`)
+      toast.success('Đã cập nhật truyện thành công.')
+      navigate(`/content/stories/${id}`)
     },
     onError: (error: any) => {
-      toast.error(error?.response?.data?.message ?? 'Failed to update story.')
+      toast.error(error?.message ?? 'Failed to update story.')
     },
   })
 }
@@ -102,10 +102,10 @@ export const useSubmitForReview = (id: string) => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: storyKeys.detail(id) })
       queryClient.invalidateQueries({ queryKey: storyKeys.lists() })
-      toast.success('Story submitted for review.')
+      toast.success('Đã gửi truyện để xem xét.')
     },
     onError: (error: any) => {
-      toast.error(error?.response?.data?.message ?? 'Failed to submit story.')
+      toast.error(error?.message ?? 'Failed to submit story.')
     },
   })
 }
@@ -121,10 +121,10 @@ export const useUpdateStoryStatus = (id: string) => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: storyKeys.detail(id) })
       queryClient.invalidateQueries({ queryKey: storyKeys.lists() })
-      toast.success('Story status updated.')
+      toast.success('Đã cập nhật trạng thái truyện.')
     },
     onError: (error: any) => {
-      toast.error(error?.response?.data?.message ?? 'Failed to update status.')
+      toast.error(error?.message ?? 'Failed to update status.')
     },
   })
 }
@@ -141,11 +141,11 @@ export const useReviewStory = (id: string) => {
       queryClient.invalidateQueries({ queryKey: storyKeys.lists() })
       queryClient.invalidateQueries({ queryKey: storyKeys.pending() })
       toast.success(
-        variables.isApproved ? 'Story approved.' : 'Story rejected.'
+        variables.isApproved ? 'Đã phê duyệt truyện.' : 'Đã từ chối truyện.'
       )
     },
     onError: (error: any) => {
-      toast.error(error?.response?.data?.message ?? 'Failed to review story.')
+      toast.error(error?.message ?? 'Failed to review story.')
     },
   })
 }
@@ -160,11 +160,11 @@ export const useDeleteStory = () => {
     mutationFn: (id: string) => storyService.delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: storyKeys.lists() })
-      toast.success('Story deleted.')
-      navigate('/admin/stories')
+      toast.success('Đã xóa truyện.')
+      navigate('/content/stories')
     },
     onError: (error: any) => {
-      toast.error(error?.response?.data?.message ?? 'Failed to delete story.')
+      toast.error(error?.message ?? 'Failed to delete story.')
     },
   })
 }

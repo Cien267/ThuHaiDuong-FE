@@ -58,7 +58,7 @@ export const useCreateCategory = () => {
       toast.success('Tạo danh mục thành công.')
     },
     onError: (error: any) => {
-      toast.error(error?.response?.data?.message ?? 'Tạo danh mục thất bại.')
+      toast.error(error?.message ?? 'Tạo danh mục thất bại.')
     },
   })
 }
@@ -75,9 +75,7 @@ export const useUpdateCategory = (id: string) => {
       toast.success('Cập nhật danh mục thành công.')
     },
     onError: (error: any) => {
-      toast.error(
-        error?.response?.data?.message ?? 'Cập nhật danh mục thất bại.'
-      )
+      toast.error(error?.message ?? 'Cập nhật danh mục thất bại.')
     },
   })
 }
@@ -93,7 +91,7 @@ export const useDeleteCategory = () => {
       toast.success('Xóa danh mục thành công.')
     },
     onError: (error: any) => {
-      toast.error(error?.response?.data?.message ?? 'Xóa danh mục thất bại.')
+      toast.error(error?.message ?? 'Xóa danh mục thất bại.')
     },
   })
 }
@@ -133,7 +131,7 @@ export const useCreateTag = () => {
       toast.success('Tạo thẻ thành công.')
     },
     onError: (error: any) => {
-      toast.error(error?.response?.data?.message ?? 'Tạo thẻ thất bại.')
+      toast.error(error?.message ?? 'Tạo thẻ thất bại.')
     },
   })
 }
@@ -149,7 +147,7 @@ export const useUpdateTag = (id: string) => {
       toast.success('Cập nhật thẻ thành công.')
     },
     onError: (error: any) => {
-      toast.error(error?.response?.data?.message ?? 'Cập nhật thẻ thất bại.')
+      toast.error(error?.message ?? 'Cập nhật thẻ thất bại.')
     },
   })
 }
@@ -164,7 +162,7 @@ export const useDeleteTag = () => {
       toast.success('Xóa thẻ thành công.')
     },
     onError: (error: any) => {
-      toast.error(error?.response?.data?.message ?? 'Xóa thẻ thất bại.')
+      toast.error(error?.message ?? 'Xóa thẻ thất bại.')
     },
   })
 }
