@@ -1,7 +1,6 @@
 import {
   LayoutDashboard,
   BookOpen,
-  FileText,
   User,
   Users,
   Tag,
@@ -45,12 +44,6 @@ export const SIDEBAR_MENU: MenuItem[] = [
         label: 'Truyện',
         icon: BookOpen,
         path: '/content/stories',
-      },
-      {
-        id: 'chapters',
-        label: 'Chương',
-        icon: FileText,
-        path: '/content/chapters',
       },
       {
         id: 'authors',

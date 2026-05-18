@@ -133,9 +133,9 @@ export const StoryDetailPage = () => {
               <StoryStatusBadge status={story.status} />
             </div>
             <p className="text-sm text-muted-foreground mt-0.5">
-              by <span className="font-medium">{story.authorName}</span>
+              viết bởi <span className="font-medium">{story.authorName}</span>
               {story.uploadedByUserName && (
-                <span> · Uploaded by {story.uploadedByUserName}</span>
+                <span> · Được tải lên bởi {story.uploadedByUserName}</span>
               )}
             </p>
           </div>
@@ -150,7 +150,7 @@ export const StoryDetailPage = () => {
               onClick={() => navigate(`/content/stories/${id}/edit`)}
             >
               <Pencil className="mr-2 h-4 w-4" />
-              Edit
+              Chỉnh sửa
             </Button>
           )}
 
@@ -162,7 +162,7 @@ export const StoryDetailPage = () => {
               disabled={submitMutation.isPending}
             >
               <Send className="mr-2 h-4 w-4" />
-              {submitMutation.isPending ? 'Submitting...' : 'Submit for Review'}
+              {submitMutation.isPending ? 'Đang gửi...' : 'Gửi để xem xét'}
             </Button>
           )}
 
@@ -173,14 +173,14 @@ export const StoryDetailPage = () => {
               onClick={() => setStatusOpen(true)}
             >
               <CheckCircle className="mr-2 h-4 w-4" />
-              Update Status
+              Cập nhật trạng thái
             </Button>
           )}
 
           {canReview && (
             <Button size="sm" onClick={() => setReviewOpen(true)}>
               <CheckCircle className="mr-2 h-4 w-4" />
-              Review
+              Đánh giá
             </Button>
           )}
 
@@ -191,7 +191,7 @@ export const StoryDetailPage = () => {
               onClick={() => setDeleteOpen(true)}
             >
               <Trash2 className="mr-2 h-4 w-4" />
-              Delete
+              Xóa
             </Button>
           )}
         </div>
@@ -201,7 +201,7 @@ export const StoryDetailPage = () => {
       {story.status === 'Rejected' && story.rejectionReason && (
         <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-4">
           <p className="text-sm font-semibold text-destructive mb-1">
-            Rejected
+            Đã bị từ chối
           </p>
           <p className="text-sm text-destructive/90">{story.rejectionReason}</p>
         </div>
@@ -213,7 +213,7 @@ export const StoryDetailPage = () => {
           <CardContent className="pt-4 pb-4">
             <div className="flex items-center gap-2">
               <BookOpen className="h-4 w-4 text-muted-foreground" />
-              <p className="text-sm text-muted-foreground">Chapters</p>
+              <p className="text-sm text-muted-foreground">Chương</p>
             </div>
             <p className="text-2xl font-bold mt-1">{story.totalChapters}</p>
           </CardContent>
@@ -222,7 +222,7 @@ export const StoryDetailPage = () => {
           <CardContent className="pt-4 pb-4">
             <div className="flex items-center gap-2">
               <Eye className="h-4 w-4 text-muted-foreground" />
-              <p className="text-sm text-muted-foreground">Views</p>
+              <p className="text-sm text-muted-foreground">Lượt xem</p>
             </div>
             <p className="text-2xl font-bold mt-1">
               {story.totalViews.toLocaleString()}
@@ -233,7 +233,7 @@ export const StoryDetailPage = () => {
           <CardContent className="pt-4 pb-4">
             <div className="flex items-center gap-2">
               <Star className="h-4 w-4 text-muted-foreground" />
-              <p className="text-sm text-muted-foreground">Rating</p>
+              <p className="text-sm text-muted-foreground">Đánh giá</p>
             </div>
             <p className="text-2xl font-bold mt-1">
               {story.averageRating.toFixed(1)}
@@ -247,7 +247,7 @@ export const StoryDetailPage = () => {
           <CardContent className="pt-4 pb-4">
             <div className="flex items-center gap-2">
               <BarChart2 className="h-4 w-4 text-muted-foreground" />
-              <p className="text-sm text-muted-foreground">Last Update</p>
+              <p className="text-sm text-muted-foreground">Cập nhật lần cuối</p>
             </div>
             <p className="text-sm font-semibold mt-1">
               {story.lastChapterAt
@@ -265,7 +265,7 @@ export const StoryDetailPage = () => {
           {/* Description */}
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-base">Description</CardTitle>
+              <CardTitle className="text-base">Mô tả</CardTitle>
             </CardHeader>
             <CardContent>
               {story.description ? (
@@ -274,7 +274,7 @@ export const StoryDetailPage = () => {
                 </p>
               ) : (
                 <p className="text-sm text-muted-foreground italic">
-                  No description.
+                  Không có mô tả.
                 </p>
               )}
             </CardContent>
@@ -284,31 +284,29 @@ export const StoryDetailPage = () => {
           <Card>
             <CardHeader className="pb-2 flex flex-row items-center justify-between">
               <CardTitle className="text-base">
-                Chapters ({story.totalChapters})
+                Chương ({story.totalChapters})
               </CardTitle>
               <Button
                 size="sm"
                 variant="outline"
-                onClick={() =>
-                  navigate(`/content/stories/${id}/chapters/create`)
-                }
+                onClick={() => navigate(`/content/stories/${id}/chapters`)}
               >
-                + Add Chapter
+                Xem danh sách
               </Button>
             </CardHeader>
             <CardContent className="p-0">
               {story.chapters.length === 0 ? (
                 <p className="py-8 text-center text-sm text-muted-foreground">
-                  No chapters yet.
+                  Chưa có chương nào.
                 </p>
               ) : (
                 <Table>
                   <TableHeader>
                     <TableRow>
                       <TableHead className="w-16">#</TableHead>
-                      <TableHead>Title</TableHead>
+                      <TableHead>Tiêu đề</TableHead>
                       <TableHead className="text-center">VIP</TableHead>
-                      <TableHead>Published</TableHead>
+                      <TableHead>Đã xuất bản</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -335,7 +333,7 @@ export const StoryDetailPage = () => {
                           {ch.publishedAt ? (
                             new Date(ch.publishedAt).toLocaleDateString()
                           ) : (
-                            <span className="italic">Draft</span>
+                            <span className="italic">Nháp</span>
                           )}
                         </TableCell>
                       </TableRow>
@@ -365,14 +363,16 @@ export const StoryDetailPage = () => {
           {/* Metadata */}
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-base">Details</CardTitle>
+              <CardTitle className="text-base">Chi tiết</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3 text-sm">
-              <MetaRow label="Type">{story.storyType}</MetaRow>
-              <MetaRow label="Source">{story.contentSource}</MetaRow>
+              <MetaRow label="Thể loại">{story.storyType}</MetaRow>
+              <MetaRow label="Nguồn">{story.contentSource}</MetaRow>
 
               {story.releaseSchedule && (
-                <MetaRow label="Schedule">{story.releaseSchedule}</MetaRow>
+                <MetaRow label="Lịch phát hành">
+                  {story.releaseSchedule}
+                </MetaRow>
               )}
 
               {story.nextChapterAt && (
@@ -406,11 +406,11 @@ export const StoryDetailPage = () => {
           {/* Categories */}
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-base">Categories</CardTitle>
+              <CardTitle className="text-base">Thể loại</CardTitle>
             </CardHeader>
             <CardContent>
               {story.categories.length === 0 ? (
-                <p className="text-sm text-muted-foreground italic">None</p>
+                <p className="text-sm text-muted-foreground italic">Không có</p>
               ) : (
                 <div className="flex flex-wrap gap-1">
                   {story.categories.map((c) => (
@@ -426,11 +426,11 @@ export const StoryDetailPage = () => {
           {/* Tags */}
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-base">Tags</CardTitle>
+              <CardTitle className="text-base">Thẻ</CardTitle>
             </CardHeader>
             <CardContent>
               {story.tags.length === 0 ? (
-                <p className="text-sm text-muted-foreground italic">None</p>
+                <p className="text-sm text-muted-foreground italic">Không có</p>
               ) : (
                 <div className="flex flex-wrap gap-1">
                   {story.tags.map((t) => (
@@ -466,19 +466,20 @@ export const StoryDetailPage = () => {
       <AlertDialog open={deleteOpen} onOpenChange={setDeleteOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete "{story.title}"?</AlertDialogTitle>
+            <AlertDialogTitle>Xóa "{story.title}"?</AlertDialogTitle>
             <AlertDialogDescription>
-              This will soft-delete the story and all its chapters permanently.
+              Điều này sẽ xóa mềm câu chuyện và tất cả các chương của nó vĩnh
+              viễn.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>Hủy</AlertDialogCancel>
             <AlertDialogAction
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
               onClick={handleDelete}
               disabled={deleteMutation.isPending}
             >
-              {deleteMutation.isPending ? 'Deleting...' : 'Delete'}
+              {deleteMutation.isPending ? 'Đang xóa...' : 'Xóa'}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

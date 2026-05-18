@@ -51,7 +51,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import { chapterService } from '../services/chapterService'
 import { chapterKeys } from '../constants/chapter.constants'
 import { storyKeys } from '@/features/stories/constants/story.constants'
-import { CHAPTER_STATUS } from '../types/chapter.types'
+import { CHAPTER_STATUS_OPTIONS } from '../types/chapter.types'
 import type { ChapterListItem, ChapterStatus } from '../types/chapter.types'
 
 export const ChaptersPage = () => {
@@ -91,15 +91,15 @@ export const ChaptersPage = () => {
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => navigate(`/admin/stories/${storyId}`)}
+            onClick={() => navigate(`/content/stories/${storyId}`)}
           >
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <div>
-            <h1 className="text-2xl font-bold">Chapters</h1>
+            <h1 className="text-2xl font-bold">Chương</h1>
             {story && (
               <Link
-                to={`/admin/stories/${storyId}`}
+                to={`/content/stories/${storyId}`}
                 className="text-sm text-muted-foreground hover:underline"
               >
                 {story.title}
@@ -108,10 +108,13 @@ export const ChaptersPage = () => {
           </div>
         </div>
         <Button
-          onClick={() => navigate(`/admin/stories/${storyId}/chapters/create`)}
+          variant={'greenShiny'}
+          onClick={() =>
+            navigate(`/content/stories/${storyId}/chapters/create`)
+          }
         >
           <Plus className="mr-2 h-4 w-4" />
-          New Chapter
+          Tạo Chương Mới
         </Button>
       </div>
 
@@ -128,10 +131,10 @@ export const ChaptersPage = () => {
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All statuses</SelectItem>
-            {Object.values(CHAPTER_STATUS).map((s) => (
-              <SelectItem key={s} value={s}>
-                {s}
+            <SelectItem value="all">Tất cả trạng thái</SelectItem>
+            {CHAPTER_STATUS_OPTIONS.map((s) => (
+              <SelectItem key={s.value} value={s.value}>
+                {s.label}
               </SelectItem>
             ))}
           </SelectContent>
@@ -139,7 +142,7 @@ export const ChaptersPage = () => {
 
         {data && (
           <p className="text-sm text-muted-foreground">
-            {data.totalCount} chapters total
+            {data.totalCount} chương
           </p>
         )}
       </div>
@@ -150,12 +153,12 @@ export const ChaptersPage = () => {
           <TableHeader>
             <TableRow>
               <TableHead className="w-16">#</TableHead>
-              <TableHead>Title</TableHead>
-              <TableHead className="text-center">Status</TableHead>
+              <TableHead>Chủ đề</TableHead>
+              <TableHead className="text-center">Trạng thái</TableHead>
               <TableHead className="text-center">VIP</TableHead>
-              <TableHead className="text-center">Words</TableHead>
-              <TableHead className="text-center">Views</TableHead>
-              <TableHead>Published</TableHead>
+              <TableHead className="text-center">Số từ</TableHead>
+              <TableHead className="text-center">Lượt xem</TableHead>
+              <TableHead>Ngày xuất bản</TableHead>
               <TableHead className="w-10" />
             </TableRow>
           </TableHeader>
@@ -175,7 +178,7 @@ export const ChaptersPage = () => {
                   colSpan={8}
                   className="py-10 text-center text-muted-foreground"
                 >
-                  No chapters found.
+                  Không tìm thấy chương nào.
                 </TableCell>
               </TableRow>
             ) : (
@@ -183,7 +186,7 @@ export const ChaptersPage = () => {
                 <TableRow
                   key={ch.id}
                   className="cursor-pointer"
-                  onClick={() => navigate(`/admin/chapters/${ch.id}`)}
+                  onClick={() => navigate(`/content/chapters/${ch.id}`)}
                 >
                   <TableCell className="font-mono text-muted-foreground">
                     {ch.chapterNumber}
@@ -223,18 +226,20 @@ export const ChaptersPage = () => {
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end" className="w-44">
                         <DropdownMenuItem
-                          onClick={() => navigate(`/admin/chapters/${ch.id}`)}
+                          onClick={() => navigate(`/content/chapters/${ch.id}`)}
                         >
                           <Eye className="mr-2 h-4 w-4" />
-                          View
+                          Xem
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           onClick={() =>
-                            navigate(`/admin/chapters/${ch.id}/edit`)
+                            navigate(
+                              `/content/stories/${storyId}/chapters/${ch.id}/edit`
+                            )
                           }
                         >
                           <Pencil className="mr-2 h-4 w-4" />
-                          Edit
+                          Chỉnh sửa
                         </DropdownMenuItem>
 
                         <DropdownMenuSeparator />
@@ -247,7 +252,7 @@ export const ChaptersPage = () => {
                             }
                           >
                             <Send className="mr-2 h-4 w-4" />
-                            Publish
+                            Xuất bản
                           </DropdownMenuItem>
                         )}
                         {ch.status === 'Published' && (
@@ -255,14 +260,14 @@ export const ChaptersPage = () => {
                             onClick={() => handleStatusChange(ch.id, 'Hidden')}
                           >
                             <EyeOff className="mr-2 h-4 w-4" />
-                            Hide
+                            Ẩn
                           </DropdownMenuItem>
                         )}
                         {ch.status !== 'Draft' && (
                           <DropdownMenuItem
                             onClick={() => handleStatusChange(ch.id, 'Draft')}
                           >
-                            Move to Draft
+                            Chuyển về Nháp
                           </DropdownMenuItem>
                         )}
 
@@ -273,7 +278,7 @@ export const ChaptersPage = () => {
                           onClick={() => setDeleteId(ch.id)}
                         >
                           <Trash2 className="mr-2 h-4 w-4" />
-                          Delete
+                          Xóa
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -294,10 +299,10 @@ export const ChaptersPage = () => {
             disabled={page === 1}
             onClick={() => setPage((p) => p - 1)}
           >
-            Previous
+            Trước
           </Button>
           <span className="text-sm text-muted-foreground">
-            Page {page} of {totalPages}
+            Trang {page} của {totalPages}
           </span>
           <Button
             variant="outline"
@@ -305,7 +310,7 @@ export const ChaptersPage = () => {
             disabled={page === totalPages}
             onClick={() => setPage((p) => p + 1)}
           >
-            Next
+            Tiếp theo
           </Button>
         </div>
       )}
@@ -317,20 +322,20 @@ export const ChaptersPage = () => {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Chapter?</AlertDialogTitle>
+            <AlertDialogTitle>Xóa chương?</AlertDialogTitle>
             <AlertDialogDescription>
-              This will soft-delete the chapter. If it was Published, the
-              story's chapter count will be updated automatically.
+              Điều này sẽ xóa mềm chương. Nếu nó đã được xuất bản, số lượng
+              chương của câu chuyện sẽ được cập nhật tự động.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>Hủy</AlertDialogCancel>
             <AlertDialogAction
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
               onClick={() => deleteId && deleteMutation.mutate(deleteId)}
               disabled={deleteMutation.isPending}
             >
-              {deleteMutation.isPending ? 'Deleting...' : 'Delete'}
+              {deleteMutation.isPending ? 'Đang xóa...' : 'Xóa'}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -338,3 +343,5 @@ export const ChaptersPage = () => {
     </div>
   )
 }
+
+export default ChaptersPage

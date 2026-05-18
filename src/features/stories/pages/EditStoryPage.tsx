@@ -20,7 +20,7 @@ export const EditStoryPage = () => {
     )
   }
 
-  if (!story) return <Navigate to="/admin/stories" replace />
+  if (!story) return <Navigate to="/content/stories" replace />
 
   // Chỉ edit được khi Draft hoặc Rejected
   if (story.status !== 'Draft' && story.status !== 'Rejected') {
@@ -39,7 +39,7 @@ export const EditStoryPage = () => {
 
   // Contributor chỉ edit story của mình
   if (!isAdmin && story.uploadedByUserId !== user?.id) {
-    return <Navigate to="/admin/stories" replace />
+    return <Navigate to="/content/stories" replace />
   }
 
   const handleSubmit = (values: StoryFormValues) => {

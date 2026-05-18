@@ -170,3 +170,7 @@
     @apply bg-muted-foreground/40;
   }
 }
+
+.ProseMirror-focused {
+  outline: none;
+}

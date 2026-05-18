@@ -4,6 +4,12 @@ export const CHAPTER_STATUS = {
   Hidden: 'Hidden',
 } as const
 
+export const CHAPTER_STATUS_OPTIONS = [
+  { value: CHAPTER_STATUS.Draft, label: 'Nháp' },
+  { value: CHAPTER_STATUS.Published, label: 'Đã xuất bản' },
+  { value: CHAPTER_STATUS.Hidden, label: 'Ẩn' },
+]
+
 export type ChapterStatus = (typeof CHAPTER_STATUS)[keyof typeof CHAPTER_STATUS]
 
 // ── Response types ─────────────────────────────────────────────────────────────

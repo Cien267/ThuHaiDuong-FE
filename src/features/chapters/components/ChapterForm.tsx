@@ -61,9 +61,9 @@ export const CreateChapterForm = ({
             render={({ field }) => (
               <FormItem>
                 <FormLabel>
-                  Chapter No.
+                  Chương số
                   <span className="ml-1 text-xs text-muted-foreground">
-                    (auto if empty)
+                    (tự động nếu để trống)
                   </span>
                 </FormLabel>
                 <FormControl>
@@ -93,19 +93,19 @@ export const CreateChapterForm = ({
             name="status"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Publish</FormLabel>
+                <FormLabel>Xuất bản</FormLabel>
                 <Select onValueChange={field.onChange} value={field.value}>
                   <FormControl>
-                    <SelectTrigger>
+                    <SelectTrigger className="w-full">
                       <SelectValue />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
                     <SelectItem value={CHAPTER_STATUS.Draft}>
-                      Save as Draft
+                      Lưu nháp
                     </SelectItem>
                     <SelectItem value={CHAPTER_STATUS.Published}>
-                      Publish Now
+                      Xuất bản ngay
                     </SelectItem>
                   </SelectContent>
                 </Select>
@@ -120,7 +120,7 @@ export const CreateChapterForm = ({
             name="isVip"
             render={({ field }) => (
               <FormItem className="flex flex-col justify-end pb-1">
-                <FormLabel>VIP Chapter</FormLabel>
+                <FormLabel>Chương VIP</FormLabel>
                 <div className="flex items-center gap-2 h-9">
                   <FormControl>
                     <Switch
@@ -129,7 +129,7 @@ export const CreateChapterForm = ({
                     />
                   </FormControl>
                   <span className="text-sm text-muted-foreground">
-                    {field.value ? 'Subscription required' : 'Free to read'}
+                    {field.value ? 'Yêu cầu đăng ký' : 'Miễn phí đọc'}
                   </span>
                 </div>
               </FormItem>
@@ -144,10 +144,10 @@ export const CreateChapterForm = ({
           render={({ field }) => (
             <FormItem>
               <FormLabel>
-                Title <span className="text-destructive">*</span>
+                Tiêu đề <span className="text-destructive">*</span>
               </FormLabel>
               <FormControl>
-                <Input placeholder="Chapter title..." {...field} />
+                <Input placeholder="Tiêu đề chương..." {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -161,13 +161,13 @@ export const CreateChapterForm = ({
           render={({ field }) => (
             <FormItem>
               <FormLabel>
-                Content <span className="text-destructive">*</span>
+                Nội dung <span className="text-destructive">*</span>
               </FormLabel>
               <FormControl>
                 <RichTextEditor
                   value={field.value}
                   onChange={field.onChange}
-                  placeholder="Start writing..."
+                  placeholder="Bắt đầu viết..."
                 />
               </FormControl>
               <FormMessage />
@@ -175,20 +175,20 @@ export const CreateChapterForm = ({
           )}
         />
 
-        <div className="flex justify-end gap-2 pt-2 border-t">
+        <div className="flex justify-end gap-2 pt-2">
           <Button
             type="button"
             variant="outline"
             onClick={() => window.history.back()}
           >
-            Cancel
+            Hủy
           </Button>
-          <Button type="submit" disabled={isLoading}>
+          <Button variant={'greenShiny'} type="submit" disabled={isLoading}>
             {isLoading
-              ? 'Saving...'
+              ? 'Đang lưu...'
               : form.watch('status') === 'Published'
-                ? 'Publish Chapter'
-                : 'Save Draft'}
+                ? 'Xuất bản chương'
+                : 'Lưu nháp'}
           </Button>
         </div>
       </form>
@@ -237,10 +237,10 @@ export const EditChapterForm = ({
             render={({ field }) => (
               <FormItem className="sm:col-span-2">
                 <FormLabel>
-                  Title <span className="text-destructive">*</span>
+                  Tiêu đề <span className="text-destructive">*</span>
                 </FormLabel>
                 <FormControl>
-                  <Input placeholder="Chapter title..." {...field} />
+                  <Input placeholder="Tiêu đề chương..." {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -253,7 +253,7 @@ export const EditChapterForm = ({
             name="isVip"
             render={({ field }) => (
               <FormItem className="flex items-center gap-2">
-                <FormLabel className="mt-0">VIP Chapter</FormLabel>
+                <FormLabel className="mt-0">Chương VIP</FormLabel>
                 <FormControl>
                   <Switch
                     checked={field.value}
@@ -272,7 +272,7 @@ export const EditChapterForm = ({
           render={({ field }) => (
             <FormItem>
               <FormLabel>
-                Content <span className="text-destructive">*</span>
+                Nội dung <span className="text-destructive">*</span>
               </FormLabel>
               <FormControl>
                 <RichTextEditor value={field.value} onChange={field.onChange} />
@@ -282,16 +282,16 @@ export const EditChapterForm = ({
           )}
         />
 
-        <div className="flex justify-end gap-2 pt-2 border-t">
+        <div className="flex justify-end gap-2 pt-2">
           <Button
             type="button"
             variant="outline"
             onClick={() => window.history.back()}
           >
-            Cancel
+            Hủy
           </Button>
-          <Button type="submit" disabled={isLoading}>
-            {isLoading ? 'Saving...' : 'Update Chapter'}
+          <Button variant={'greenShiny'} type="submit" disabled={isLoading}>
+            {isLoading ? 'Đang lưu...' : 'Cập nhật chương'}
           </Button>
         </div>
       </form>
