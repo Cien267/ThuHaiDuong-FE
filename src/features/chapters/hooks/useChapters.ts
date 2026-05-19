@@ -48,7 +48,7 @@ export const useCreateChapter = (storyId: string) => {
       queryClient.invalidateQueries({ queryKey: chapterKeys.lists() })
       queryClient.invalidateQueries({ queryKey: storyKeys.detail(storyId) })
       toast.success(`Chapter ${result.chapterNumber} created.`)
-      navigate(`/admin/chapters/${result.id}`)
+      navigate(`/content/stories/${storyId}/chapters/${result.id}`)
     },
     onError: (error: any) => {
       toast.error(error?.response?.data?.message ?? 'Failed to create chapter.')
@@ -58,7 +58,7 @@ export const useCreateChapter = (storyId: string) => {
 
 // ── Update ─────────────────────────────────────────────────────────────────────
 
-export const useUpdateChapter = (id: string) => {
+export const useUpdateChapter = (storyId: string, id: string) => {
   const queryClient = useQueryClient()
   const navigate = useNavigate()
 
@@ -68,7 +68,7 @@ export const useUpdateChapter = (id: string) => {
       queryClient.invalidateQueries({ queryKey: chapterKeys.detail(id) })
       queryClient.invalidateQueries({ queryKey: chapterKeys.lists() })
       toast.success('Chapter updated.')
-      navigate(`/admin/chapters/${id}`)
+      navigate(`/content/stories/${storyId}/chapters/${id}`)
     },
     onError: (error: any) => {
       toast.error(error?.response?.data?.message ?? 'Failed to update chapter.')
@@ -111,7 +111,7 @@ export const useDeleteChapter = (storyId: string) => {
       queryClient.invalidateQueries({ queryKey: chapterKeys.lists() })
       queryClient.invalidateQueries({ queryKey: storyKeys.detail(storyId) })
       toast.success('Chapter deleted.')
-      navigate(`/admin/stories/${storyId}`)
+      navigate(`/content/stories/${storyId}`)
     },
     onError: (error: any) => {
       toast.error(error?.response?.data?.message ?? 'Failed to delete chapter.')

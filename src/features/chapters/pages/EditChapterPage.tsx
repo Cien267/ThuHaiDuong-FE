@@ -8,7 +8,7 @@ export const EditChapterPage = () => {
   const { storyId = '' } = useParams<{ storyId: string }>()
 
   const { data: chapter, isLoading } = useChapterDetail(id)
-  const updateMutation = useUpdateChapter(id)
+  const updateMutation = useUpdateChapter(storyId, id)
 
   if (isLoading) {
     return (

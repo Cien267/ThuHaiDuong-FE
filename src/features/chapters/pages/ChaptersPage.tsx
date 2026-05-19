@@ -186,7 +186,9 @@ export const ChaptersPage = () => {
                 <TableRow
                   key={ch.id}
                   className="cursor-pointer"
-                  onClick={() => navigate(`/content/chapters/${ch.id}`)}
+                  onClick={() =>
+                    navigate(`/content/stories/${storyId}/chapters/${ch.id}`)
+                  }
                 >
                   <TableCell className="font-mono text-muted-foreground">
                     {ch.chapterNumber}
@@ -226,7 +228,11 @@ export const ChaptersPage = () => {
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end" className="w-44">
                         <DropdownMenuItem
-                          onClick={() => navigate(`/content/chapters/${ch.id}`)}
+                          onClick={() =>
+                            navigate(
+                              `/content/stories/${storyId}/chapters/${ch.id}`
+                            )
+                          }
                         >
                           <Eye className="mr-2 h-4 w-4" />
                           Xem
