@@ -34,9 +34,9 @@ const CreateChapterPage = lazy(
 const EditChapterPage = lazy(
   () => import('@/features/chapters/pages/EditChapterPage')
 )
-// const ChapterDetailPage = lazy(
-//   () => import('@/features/chapters/pages/ChapterDetailPage')
-// )
+const ChapterDetailPage = lazy(
+  () => import('@/features/chapters/pages/ChapterDetailPage')
+)
 
 export const router = createBrowserRouter([
   {
@@ -143,14 +143,14 @@ export const router = createBrowserRouter([
                   </SuspenseWrapper>
                 ),
               },
-              // {
-              //   path: 'stories/:storyId/chapters/:id',
-              //   element: (
-              //     <SuspenseWrapper>
-              //       <ChapterDetailPage />
-              //     </SuspenseWrapper>
-              //   ),
-              // },
+              {
+                path: 'stories/:storyId/chapters/:id',
+                element: (
+                  <SuspenseWrapper>
+                    <ChapterDetailPage />
+                  </SuspenseWrapper>
+                ),
+              },
               {
                 path: 'stories/:storyId/chapters/create',
                 element: (
