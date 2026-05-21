@@ -60,7 +60,7 @@ export const ReviewDialog = ({
     >
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle>Review Story</DialogTitle>
+          <DialogTitle>Xét duyệt truyện</DialogTitle>
           <p className="text-sm text-muted-foreground mt-1 truncate">
             {storyTitle}
           </p>
@@ -85,22 +85,24 @@ export const ReviewDialog = ({
                       className="flex gap-6"
                     >
                       <div className="flex items-center gap-2">
-                        <RadioGroupItem value="approve" id="approve" />
-                        <label
-                          htmlFor="approve"
-                          className="text-sm font-medium text-green-600 cursor-pointer"
-                        >
-                          ✓ Approve
-                        </label>
+                        <RadioGroupItem value="approve" id="approve">
+                          <label
+                            htmlFor="approve"
+                            className="text-sm font-medium text-green-600 cursor-pointer"
+                          >
+                            ✓ Duyệt
+                          </label>
+                        </RadioGroupItem>
                       </div>
                       <div className="flex items-center gap-2">
-                        <RadioGroupItem value="reject" id="reject" />
-                        <label
-                          htmlFor="reject"
-                          className="text-sm font-medium text-destructive cursor-pointer"
-                        >
-                          ✗ Reject
-                        </label>
+                        <RadioGroupItem value="reject" id="reject">
+                          <label
+                            htmlFor="reject"
+                            className="text-sm font-medium text-destructive cursor-pointer"
+                          >
+                            ✗ Từ chối
+                          </label>
+                        </RadioGroupItem>
                       </div>
                     </RadioGroup>
                   </FormControl>
@@ -117,12 +119,11 @@ export const ReviewDialog = ({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
-                      Rejection Reason{' '}
-                      <span className="text-destructive">*</span>
+                      Lý do từ chối <span className="text-destructive">*</span>
                     </FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="Tell the contributor what needs to be fixed..."
+                        placeholder="Hãy cho người đóng góp biết những gì cần được sửa chữa..."
                         className="resize-none"
                         rows={4}
                         {...field}
@@ -148,10 +149,10 @@ export const ReviewDialog = ({
                 variant={isApproved ? 'default' : 'destructive'}
               >
                 {isLoading
-                  ? 'Submitting...'
+                  ? 'Đang gửi...'
                   : isApproved
-                    ? 'Approve Story'
-                    : 'Reject Story'}
+                    ? 'Duyệt truyện'
+                    : 'Từ chối truyện'}
               </Button>
             </DialogFooter>
           </form>
