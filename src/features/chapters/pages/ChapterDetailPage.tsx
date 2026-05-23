@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useParams, useNavigate, Link, Navigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Card, CardContent } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -35,6 +35,7 @@ import { chapterService } from '../services/chapterService'
 import { chapterKeys } from '../constants/chapter.constants'
 import { storyKeys } from '@/features/stories/constants/story.constants'
 import type { ChapterStatus } from '../types/chapter.types'
+import CommentsPage from '@/features/comments/page/CommentPage'
 
 export const ChapterDetailPage = () => {
   const { id = '' } = useParams<{ id: string }>()
@@ -175,6 +176,15 @@ export const ChapterDetailPage = () => {
             className="prose prose-sm max-w-none dark:prose-invert leading-relaxed"
             dangerouslySetInnerHTML={{ __html: chapter.content }}
           />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader className="pb-2 flex flex-row items-center justify-between">
+          <CardTitle className="text-base">Bình luận</CardTitle>
+        </CardHeader>
+        <CardContent className="p-0">
+          <CommentsPage storyId={undefined} chapterId={id}></CommentsPage>
         </CardContent>
       </Card>
 

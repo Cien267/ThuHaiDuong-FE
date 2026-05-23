@@ -44,6 +44,7 @@ import {
 } from '../hooks/useStories'
 import useAuthStore from '@/store/authStore'
 import type { StoryStatus, ReviewStoryValues } from '../types/story.types'
+import CommentsPage from '@/features/comments/page/CommentPage'
 
 export const StoryDetailPage = () => {
   const { id = '' } = useParams<{ id: string }>()
@@ -314,7 +315,9 @@ export const StoryDetailPage = () => {
                       <TableRow
                         key={ch.id}
                         className="cursor-pointer"
-                        onClick={() => navigate(`/content/chapters/${ch.id}`)}
+                        onClick={() =>
+                          navigate(`/content/stories/${id}/chapters/${ch.id}`)
+                        }
                       >
                         <TableCell className="text-muted-foreground font-mono">
                           {ch.chapterNumber}
@@ -341,6 +344,18 @@ export const StoryDetailPage = () => {
                   </TableBody>
                 </Table>
               )}
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="pb-2 flex flex-row items-center justify-between">
+              <CardTitle className="text-base">Bình luận</CardTitle>
+            </CardHeader>
+            <CardContent className="p-0">
+              <CommentsPage
+                storyId={story.id}
+                chapterId={undefined}
+              ></CommentsPage>
             </CardContent>
           </Card>
         </div>

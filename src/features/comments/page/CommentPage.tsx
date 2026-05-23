@@ -4,19 +4,11 @@ import {
   EyeOff,
   MessageSquare,
   Trash2,
-  User,
   ChevronDown,
   ChevronRight,
 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -42,6 +34,14 @@ import {
 } from '../hooks/useComments'
 import type { CommentQuery, CommentResult } from '../types/comment.types'
 import { formatDate } from '@/lib/utils'
+import {
+  TableCell,
+  TableRow,
+  Table,
+  TableHeader,
+  TableHead,
+  TableBody,
+} from '@/components/ui/table'
 
 function getDisplayName(comment: CommentResult) {
   if (comment.author.isGuest) return comment.author.guestName ?? 'Khách'
@@ -64,13 +64,13 @@ function CommentRow({ comment, isReply = false }: CommentRowProps) {
 
   return (
     <>
-      <tr
+      <TableRow
         className={
           comment.isHidden ? 'bg-muted/40 opacity-60' : 'hover:bg-muted/20'
         }
       >
         {/* Indent cho reply */}
-        <td className="px-4 py-3">
+        <TableCell>
           <div
             className={`flex items-start gap-2 ${isReply ? 'pl-6 border-l-2 border-border' : ''}`}
           >
@@ -87,46 +87,23 @@ function CommentRow({ comment, isReply = false }: CommentRowProps) {
                 )}
               </button>
             )}
-            {!hasReplies && !isReply && <span className="w-4" />}
-
             <div className="flex-1 min-w-0">
               <p className="text-sm line-clamp-2 text-foreground">
                 {comment.content}
               </p>
             </div>
           </div>
-        </td>
+        </TableCell>
 
         {/* Tác giả */}
-        <td className="px-4 py-3 whitespace-nowrap">
-          <div className="flex items-center gap-1.5">
-            <User className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
-            <span className="text-sm truncate max-w-[120px]">
-              {getDisplayName(comment)}
-            </span>
-            {comment.author.isGuest && (
-              <Badge variant="outline" className="text-xs px-1 py-0">
-                Khách
-              </Badge>
-            )}
-          </div>
-        </td>
-
-        {/* Loại */}
-        <td className="px-4 py-3 whitespace-nowrap">
-          {comment.chapterId ? (
-            <Badge variant="secondary" className="text-xs">
-              Chapter
-            </Badge>
-          ) : (
-            <Badge variant="outline" className="text-xs">
-              Truyện
-            </Badge>
-          )}
-        </td>
+        <TableCell>
+          <span className="text-sm truncate max-w-[120px]">
+            {getDisplayName(comment)}
+          </span>
+        </TableCell>
 
         {/* Replies */}
-        <td className="px-4 py-3 text-center">
+        <TableCell>
           {!isReply && comment.replies.length > 0 ? (
             <button
               onClick={() => setExpanded((v) => !v)}
@@ -138,31 +115,26 @@ function CommentRow({ comment, isReply = false }: CommentRowProps) {
           ) : (
             <span className="text-xs text-muted-foreground">—</span>
           )}
-        </td>
+        </TableCell>
 
         {/* Trạng thái */}
-        <td className="px-4 py-3 whitespace-nowrap">
+        <TableCell>
           {comment.isHidden ? (
-            <Badge variant="destructive" className="text-xs">
+            <Badge variant="secondary" className="text-xs">
               Đã ẩn
             </Badge>
           ) : (
-            <Badge
-              variant="default"
-              className="text-xs bg-green-600 hover:bg-green-600"
-            >
-              Hiển thị
-            </Badge>
+            <Badge variant="info">Hiển thị</Badge>
           )}
-        </td>
+        </TableCell>
 
         {/* Ngày tạo */}
-        <td className="px-4 py-3 text-xs text-muted-foreground whitespace-nowrap">
+        <TableCell className="px-4 py-3 text-xs text-muted-foreground whitespace-nowrap">
           {formatDate(comment.createdAt)}
-        </td>
+        </TableCell>
 
         {/* Actions */}
-        <td className="px-4 py-3">
+        <TableCell className="px-4 py-3">
           <div className="flex items-center gap-1 justify-end">
             <TooltipProvider delayDuration={200}>
               {/* Toggle hide */}
@@ -224,8 +196,8 @@ function CommentRow({ comment, isReply = false }: CommentRowProps) {
               </AlertDialog>
             </TooltipProvider>
           </div>
-        </td>
-      </tr>
+        </TableCell>
+      </TableRow>
 
       {/* Replies (expanded) */}
       {expanded &&
@@ -237,146 +209,67 @@ function CommentRow({ comment, isReply = false }: CommentRowProps) {
 }
 
 // ─── CommentsPage ─────────────────────────────────────────────────────────────
+interface CommentsPageProps {
+  storyId?: string
+  chapterId?: string
+}
 
-export default function CommentsPage() {
+export default function CommentsPage({
+  storyId,
+  chapterId,
+}: CommentsPageProps) {
   const [query, setQuery] = useState<CommentQuery>({
     pageNumber: 1,
     pageSize: COMMENT_PAGE_SIZE,
+    storyId: storyId ?? undefined,
+    chapterId: chapterId ?? undefined,
   })
 
   const { data, isLoading } = useComments(query)
 
-  const setFilter = (key: keyof CommentQuery, value: string | undefined) => {
-    setQuery((prev) => ({
-      ...prev,
-      [key]: value,
-      pageNumber: 1,
-    }))
-  }
-
   const totalPages = data?.totalPages ?? 1
 
   return (
-    <div className="p-6 space-y-5">
-      {/* Header */}
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight">
-          Quản lý bình luận
-        </h1>
-        <p className="text-sm text-muted-foreground mt-1">
-          {data ? `${data.totalCount} bình luận` : 'Đang tải...'}
-        </p>
-      </div>
-
-      {/* Filters */}
-      <div className="flex flex-wrap gap-3">
-        <Select
-          value={
-            query.isHidden === undefined
-              ? 'all'
-              : query.isHidden
-                ? 'hidden'
-                : 'visible'
-          }
-          onValueChange={(val) =>
-            setFilter(
-              'isHidden',
-              val === 'all' ? undefined : val === 'hidden' ? 'true' : 'false'
-            )
-          }
-        >
-          <SelectTrigger className="w-40">
-            <SelectValue placeholder="Trạng thái" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Tất cả</SelectItem>
-            <SelectItem value="visible">Đang hiển thị</SelectItem>
-            <SelectItem value="hidden">Đã ẩn</SelectItem>
-          </SelectContent>
-        </Select>
-
-        <Select
-          value={
-            query.isGuest === undefined
-              ? 'all'
-              : query.isGuest
-                ? 'guest'
-                : 'user'
-          }
-          onValueChange={(val) =>
-            setFilter(
-              'isGuest',
-              val === 'all' ? undefined : val === 'guest' ? 'true' : 'false'
-            )
-          }
-        >
-          <SelectTrigger className="w-40">
-            <SelectValue placeholder="Loại tác giả" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Tất cả</SelectItem>
-            <SelectItem value="user">Thành viên</SelectItem>
-            <SelectItem value="guest">Khách</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-
+    <div className="p-6 pt-0 space-y-5">
       {/* Table */}
-      <div className="rounded-md border bg-card">
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b bg-muted/50">
-                <th className="px-4 py-3 text-left font-medium text-muted-foreground">
-                  Nội dung
-                </th>
-                <th className="px-4 py-3 text-left font-medium text-muted-foreground">
-                  Tác giả
-                </th>
-                <th className="px-4 py-3 text-left font-medium text-muted-foreground">
-                  Loại
-                </th>
-                <th className="px-4 py-3 text-center font-medium text-muted-foreground">
-                  Replies
-                </th>
-                <th className="px-4 py-3 text-left font-medium text-muted-foreground">
-                  Trạng thái
-                </th>
-                <th className="px-4 py-3 text-left font-medium text-muted-foreground">
-                  Ngày tạo
-                </th>
-                <th className="px-4 py-3 text-right font-medium text-muted-foreground">
-                  Thao tác
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border">
-              {isLoading ? (
-                <tr>
-                  <td
-                    colSpan={7}
-                    className="px-4 py-12 text-center text-muted-foreground"
-                  >
-                    Đang tải...
-                  </td>
-                </tr>
-              ) : data?.data.length === 0 ? (
-                <tr>
-                  <td
-                    colSpan={7}
-                    className="px-4 py-12 text-center text-muted-foreground"
-                  >
-                    Không có bình luận nào
-                  </td>
-                </tr>
-              ) : (
-                data?.data.map((comment) => (
-                  <CommentRow key={comment.id} comment={comment} />
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
+      <div className="overflow-x-auto">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Nội dung</TableHead>
+              <TableHead>Người viết</TableHead>
+              <TableHead>Replies</TableHead>
+              <TableHead>Trạng thái</TableHead>
+              <TableHead>Ngày tạo</TableHead>
+              <TableHead className="w-10" />
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {isLoading ? (
+              <TableRow>
+                <TableCell
+                  colSpan={8}
+                  className="py-10 text-center text-muted-foreground"
+                >
+                  Loading...
+                </TableCell>
+              </TableRow>
+            ) : data?.data.length === 0 ? (
+              <TableRow>
+                <TableCell
+                  colSpan={8}
+                  className="py-10 text-center text-muted-foreground"
+                >
+                  Chưa có bình luận nào.
+                </TableCell>
+              </TableRow>
+            ) : (
+              data?.data.map((comment) => (
+                <CommentRow key={comment.id} comment={comment} />
+              ))
+            )}
+          </TableBody>
+        </Table>
       </div>
 
       {/* Pagination */}
