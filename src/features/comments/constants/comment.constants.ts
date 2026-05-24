@@ -5,4 +5,4 @@ export const COMMENT_QUERY_KEYS = {
     [...COMMENT_QUERY_KEYS.lists(), filters] as const,
 }
 
-export const COMMENT_PAGE_SIZE = 10
+export const COMMENT_PAGE_SIZE = 50
