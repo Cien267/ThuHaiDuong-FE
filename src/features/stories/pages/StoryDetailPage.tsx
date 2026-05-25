@@ -45,6 +45,7 @@ import {
 import useAuthStore from '@/store/authStore'
 import type { StoryStatus, ReviewStoryValues } from '../types/story.types'
 import CommentsPage from '@/features/comments/page/CommentPage'
+import { StoryRatings } from '@/features/ratings/components/StoryRatings'
 
 export const StoryDetailPage = () => {
   const { id = '' } = useParams<{ id: string }>()
@@ -356,6 +357,15 @@ export const StoryDetailPage = () => {
                 storyId={story.id}
                 chapterId={undefined}
               ></CommentsPage>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="pb-2 flex flex-row items-center justify-between">
+              <CardTitle className="text-base">Đánh giá</CardTitle>
+            </CardHeader>
+            <CardContent className="p-0">
+              <StoryRatings storyId={story.id}></StoryRatings>
             </CardContent>
           </Card>
         </div>

@@ -1,6 +1,7 @@
 import { RatingList } from './RatingList'
 import { RatingSummaryCard } from './RatingSummaryCard'
 import { useRatingSummary } from '../hooks/useRatings'
+import { Skeleton } from '@/components/ui/skeleton'
 
 interface Props {
   storyId: string
@@ -13,7 +14,7 @@ export function StoryRatings({ storyId }: Props) {
     <div className="space-y-5">
       {/* Summary */}
       {isLoading ? (
-        <div className="rounded-lg border bg-card p-5 h-24 animate-pulse" />
+        <Skeleton className="h-15 w-full mx-6!" />
       ) : summary ? (
         <RatingSummaryCard summary={summary} />
       ) : null}

@@ -230,7 +230,7 @@ export default function CommentsPage({
   const totalPages = data?.totalPages ?? 1
 
   return (
-    <div className="p-6 pt-0 space-y-5">
+    <div className=" pt-0 space-y-5">
       {/* Table */}
       <div className="overflow-x-auto">
         <Table>
