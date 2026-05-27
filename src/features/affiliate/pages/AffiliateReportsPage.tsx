@@ -15,6 +15,15 @@ import type {
   AffiliateDailyStatQuery,
   AffiliateLinkStatQuery,
 } from '../types/affiliate.types'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
+import { DatePicker } from '@/components/common/DatePicker'
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -58,26 +67,30 @@ function DailyStatsTab() {
     <div className="space-y-4">
       {/* Date range filter */}
       <div className="flex flex-wrap items-end gap-3">
-        <div className="space-y-1">
+        <div className="space-y-1 w-50">
           <Label>Từ ngày</Label>
-          <Input
-            type="date"
-            className="w-40"
-            value={query.from}
-            onChange={(e) =>
-              setQuery((prev) => ({ ...prev, from: e.target.value }))
+          <DatePicker
+            value={query.from ? new Date(query.from) : undefined}
+            onChange={(value) =>
+              setQuery((prev) => ({
+                ...prev,
+                from: (value ?? new Date()).toISOString().slice(0, 10),
+              }))
             }
+            placeholder="Pick a date"
           />
         </div>
-        <div className="space-y-1">
+        <div className="space-y-1 w-50">
           <Label>Đến ngày</Label>
-          <Input
-            type="date"
-            className="w-40"
-            value={query.to}
-            onChange={(e) =>
-              setQuery((prev) => ({ ...prev, to: e.target.value }))
+          <DatePicker
+            value={query.to ? new Date(query.to) : undefined}
+            onChange={(value) =>
+              setQuery((prev) => ({
+                ...prev,
+                to: (value ?? new Date()).toISOString().slice(0, 10),
+              }))
             }
+            placeholder="Pick a date"
           />
         </div>
       </div>
@@ -153,108 +166,112 @@ function LinkStatsTab() {
     <div className="space-y-4">
       {/* Date range filter */}
       <div className="flex flex-wrap items-end gap-3">
-        <div className="space-y-1">
+        <div className="space-y-1 w-50">
           <Label>Từ ngày</Label>
-          <Input
-            type="date"
-            className="w-40"
-            value={query.from ?? ''}
-            onChange={(e) =>
+          <DatePicker
+            value={query.from ? new Date(query.from) : undefined}
+            onChange={(value) =>
               setQuery((prev) => ({
                 ...prev,
-                from: e.target.value || undefined,
+                from: value ? value.toISOString().slice(0, 10) : undefined,
+                pageNumber: 1,
               }))
             }
+            placeholder="Pick a date"
           />
         </div>
-        <div className="space-y-1">
+        <div className="space-y-1 w-50">
           <Label>Đến ngày</Label>
-          <Input
-            type="date"
-            className="w-40"
-            value={query.to ?? ''}
-            onChange={(e) =>
-              setQuery((prev) => ({ ...prev, to: e.target.value || undefined }))
+          <DatePicker
+            value={query.to ? new Date(query.to) : undefined}
+            onChange={(value) =>
+              setQuery((prev) => ({
+                ...prev,
+                to: value ? value.toISOString().slice(0, 10) : undefined,
+                pageNumber: 1,
+              }))
             }
+            placeholder="Pick a date"
           />
         </div>
       </div>
 
       {/* Table */}
-      <div className="rounded-md border bg-card">
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b bg-muted/50">
-                <th className="px-4 py-3 text-left font-medium text-muted-foreground">
-                  #
-                </th>
-                <th className="px-4 py-3 text-left font-medium text-muted-foreground">
-                  Link
-                </th>
-                <th className="px-4 py-3 text-left font-medium text-muted-foreground">
-                  Vị trí
-                </th>
-                <th className="px-4 py-3 text-center font-medium text-muted-foreground">
-                  Tổng clicks
-                </th>
-                <th className="px-4 py-3 text-center font-medium text-muted-foreground">
-                  IP duy nhất
-                </th>
-                <th className="px-4 py-3 text-left font-medium text-muted-foreground">
-                  Click cuối
-                </th>
+      <div className="overflow-x-auto">
+        <Table className="w-full text-sm">
+          <TableHeader>
+            <TableRow>
+              <TableHead className="px-4 py-3 text-left font-medium text-muted-foreground">
+                #
+              </TableHead>
+              <TableHead className="px-4 py-3 text-left font-medium text-muted-foreground">
+                Link
+              </TableHead>
+              <TableHead className="px-4 py-3 text-left font-medium text-muted-foreground">
+                Vị trí
+              </TableHead>
+              <TableHead className="px-4 py-3 text-center font-medium text-muted-foreground">
+                Tổng clicks
+              </TableHead>
+              <TableHead className="px-4 py-3 text-center font-medium text-muted-foreground">
+                IP duy nhất
+              </TableHead>
+              <TableHead className="px-4 py-3 text-left font-medium text-muted-foreground">
+                Click cuối
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody className="divide-y divide-border">
+            {isLoading ? (
+              <tr>
+                <td
+                  colSpan={6}
+                  className="px-4 py-10 text-center text-muted-foreground"
+                >
+                  Đang tải...
+                </td>
               </tr>
-            </thead>
-            <tbody className="divide-y divide-border">
-              {isLoading ? (
-                <tr>
-                  <td
-                    colSpan={6}
-                    className="px-4 py-10 text-center text-muted-foreground"
-                  >
-                    Đang tải...
-                  </td>
-                </tr>
-              ) : data.length === 0 ? (
-                <tr>
-                  <td
-                    colSpan={6}
-                    className="px-4 py-10 text-center text-muted-foreground"
-                  >
-                    Không có dữ liệu
-                  </td>
-                </tr>
-              ) : (
-                data.map((stat, index) => (
-                  <tr key={stat.affiliateLinkId} className="hover:bg-muted/20">
-                    <td className="px-4 py-3 text-muted-foreground">
-                      {index + 1}
-                    </td>
-                    <td className="px-4 py-3">
-                      <p className="font-medium">{stat.linkName}</p>
-                      <p className="text-xs text-muted-foreground font-mono">
-                        {stat.trackingCode}
-                      </p>
-                    </td>
-                    <td className="px-4 py-3">
-                      <PlacementBadge placement={stat.placement} />
-                    </td>
-                    <td className="px-4 py-3 text-center font-medium">
-                      {stat.totalClicks.toLocaleString('vi-VN')}
-                    </td>
-                    <td className="px-4 py-3 text-center text-muted-foreground">
-                      {stat.uniqueIps.toLocaleString('vi-VN')}
-                    </td>
-                    <td className="px-4 py-3 text-xs text-muted-foreground">
-                      {formatDateTime(stat.lastClickedAt)}
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
+            ) : data.length === 0 ? (
+              <tr>
+                <td
+                  colSpan={6}
+                  className="px-4 py-10 text-center text-muted-foreground"
+                >
+                  Không có dữ liệu
+                </td>
+              </tr>
+            ) : (
+              data.map((stat, index) => (
+                <TableRow
+                  key={stat.affiliateLinkId}
+                  className="hover:bg-muted/20"
+                >
+                  <TableHead className="px-4 py-3 text-muted-foreground">
+                    {index + 1}
+                  </TableHead>
+                  <TableHead className="px-4 py-3">
+                    <p className="font-medium">{stat.linkName}</p>
+                    <p className="text-xs text-muted-foreground font-mono">
+                      {stat.trackingCode}
+                    </p>
+                  </TableHead>
+                  <TableHead className="px-4 py-3">
+                    <PlacementBadge placement={stat.placement} />
+                  </TableHead>
+                  <TableHead className="px-4 py-3 text-center font-medium">
+                    {stat.totalClicks.toLocaleString('vi-VN')}
+                  </TableHead>
+                  <TableHead className="px-4 py-3 text-center text-muted-foreground">
+                    {stat.uniqueIps.toLocaleString('vi-VN')}
+                  </TableHead>
+                  <TableHead className="px-4 py-3 text-xs text-muted-foreground">
+                    {formatDateTime(stat.lastClickedAt)}
+                  </TableHead>
+                </TableRow>
+              ))
+            )}
+          </TableBody>
+        </Table>
       </div>
     </div>
   )
@@ -275,132 +292,126 @@ function RawClicksTab() {
     <div className="space-y-4">
       {/* Filters */}
       <div className="flex flex-wrap items-end gap-3">
-        <div className="space-y-1">
+        <div className="space-y-1 w-50">
           <Label>Từ ngày</Label>
-          <Input
-            type="date"
-            className="w-40"
-            value={query.fromDate ?? ''}
-            onChange={(e) =>
+          <DatePicker
+            value={query.fromDate ? new Date(query.fromDate) : undefined}
+            onChange={(value) =>
               setQuery((prev) => ({
                 ...prev,
-                fromDate: e.target.value || undefined,
+                fromDate: value ? value.toISOString().slice(0, 10) : undefined,
                 pageNumber: 1,
               }))
             }
+            placeholder="Pick a date"
           />
         </div>
-        <div className="space-y-1">
+        <div className="space-y-1 w-50">
           <Label>Đến ngày</Label>
-          <Input
-            type="date"
-            className="w-40"
-            value={query.toDate ?? ''}
-            onChange={(e) =>
+          <DatePicker
+            value={query.toDate ? new Date(query.toDate) : undefined}
+            onChange={(value) =>
               setQuery((prev) => ({
                 ...prev,
-                toDate: e.target.value || undefined,
+                toDate: value ? value.toISOString().slice(0, 10) : undefined,
                 pageNumber: 1,
               }))
             }
+            placeholder="Pick a date"
           />
         </div>
       </div>
 
       {/* Table */}
-      <div className="rounded-md border bg-card">
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b bg-muted/50">
-                <th className="px-4 py-3 text-left font-medium text-muted-foreground">
-                  Link
-                </th>
-                <th className="px-4 py-3 text-left font-medium text-muted-foreground">
-                  Người dùng
-                </th>
-                <th className="px-4 py-3 text-left font-medium text-muted-foreground">
-                  Chapter
-                </th>
-                <th className="px-4 py-3 text-left font-medium text-muted-foreground">
-                  IP
-                </th>
-                <th className="px-4 py-3 text-left font-medium text-muted-foreground">
-                  Referrer
-                </th>
-                <th className="px-4 py-3 text-left font-medium text-muted-foreground">
-                  Thời gian
-                </th>
+      <div className="overflow-x-auto">
+        <Table className="w-full text-sm">
+          <TableHeader>
+            <TableRow>
+              <TableHead className="px-4 py-3 text-left font-medium text-muted-foreground">
+                Link
+              </TableHead>
+              <TableHead className="px-4 py-3 text-left font-medium text-muted-foreground">
+                Người dùng
+              </TableHead>
+              <TableHead className="px-4 py-3 text-left font-medium text-muted-foreground">
+                Chapter
+              </TableHead>
+              <TableHead className="px-4 py-3 text-left font-medium text-muted-foreground">
+                IP
+              </TableHead>
+              <TableHead className="px-4 py-3 text-left font-medium text-muted-foreground">
+                Referrer
+              </TableHead>
+              <TableHead className="px-4 py-3 text-left font-medium text-muted-foreground">
+                Thời gian
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody className="divide-y divide-border">
+            {isLoading ? (
+              <tr>
+                <td
+                  colSpan={6}
+                  className="px-4 py-10 text-center text-muted-foreground"
+                >
+                  Đang tải...
+                </td>
               </tr>
-            </thead>
-            <tbody className="divide-y divide-border">
-              {isLoading ? (
-                <tr>
-                  <td
-                    colSpan={6}
-                    className="px-4 py-10 text-center text-muted-foreground"
-                  >
-                    Đang tải...
-                  </td>
-                </tr>
-              ) : data?.data.length === 0 ? (
-                <tr>
-                  <td
-                    colSpan={6}
-                    className="px-4 py-10 text-center text-muted-foreground"
-                  >
-                    Không có dữ liệu
-                  </td>
-                </tr>
-              ) : (
-                data?.data.map((click) => (
-                  <tr key={click.id} className="hover:bg-muted/20">
-                    <td className="px-4 py-3">
-                      <p className="font-medium">{click.linkName}</p>
-                      <p className="text-xs text-muted-foreground font-mono">
-                        {click.trackingCode}
-                      </p>
-                    </td>
-                    <td className="px-4 py-3">
-                      {click.userName ? (
-                        <span>{click.userName}</span>
-                      ) : (
-                        <Badge variant="outline" className="text-xs">
-                          Khách
-                        </Badge>
-                      )}
-                    </td>
-                    <td className="px-4 py-3 text-muted-foreground max-w-[200px]">
-                      {click.chapterTitle ? (
-                        <div>
-                          <p className="text-xs truncate">
-                            {click.chapterTitle}
+            ) : data?.data.length === 0 ? (
+              <tr>
+                <td
+                  colSpan={6}
+                  className="px-4 py-10 text-center text-muted-foreground"
+                >
+                  Không có dữ liệu
+                </td>
+              </tr>
+            ) : (
+              data?.data.map((click) => (
+                <TableRow key={click.id} className="hover:bg-muted/20">
+                  <TableCell className="px-4 py-3">
+                    <p className="font-medium">{click.linkName}</p>
+                    <p className="text-xs text-muted-foreground font-mono">
+                      {click.trackingCode}
+                    </p>
+                  </TableCell>
+                  <TableCell className="px-4 py-3">
+                    {click.userName ? (
+                      <span>{click.userName}</span>
+                    ) : (
+                      <Badge variant="outline" className="text-xs">
+                        Khách
+                      </Badge>
+                    )}
+                  </TableCell>
+                  <TableCell className="px-4 py-3 text-muted-foreground max-w-[200px]">
+                    {click.chapterTitle ? (
+                      <div>
+                        <p className="text-xs truncate">{click.chapterTitle}</p>
+                        {click.storyTitle && (
+                          <p className="text-xs text-muted-foreground/70 truncate">
+                            {click.storyTitle}
                           </p>
-                          {click.storyTitle && (
-                            <p className="text-xs text-muted-foreground/70 truncate">
-                              {click.storyTitle}
-                            </p>
-                          )}
-                        </div>
-                      ) : (
-                        '—'
-                      )}
-                    </td>
-                    <td className="px-4 py-3 font-mono text-xs text-muted-foreground">
-                      {click.ipAddress ?? '—'}
-                    </td>
-                    <td className="px-4 py-3 text-xs text-muted-foreground max-w-[150px] truncate">
-                      {click.referrer ?? '—'}
-                    </td>
-                    <td className="px-4 py-3 text-xs text-muted-foreground whitespace-nowrap">
-                      {formatDateTime(click.clickedAt)}
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
+                        )}
+                      </div>
+                    ) : (
+                      '—'
+                    )}
+                  </TableCell>
+                  <TableCell className="px-4 py-3 font-mono text-xs text-muted-foreground">
+                    {click.ipAddress ?? '—'}
+                  </TableCell>
+                  <TableCell className="px-4 py-3 text-xs text-muted-foreground max-w-[150px] truncate">
+                    {click.referrer ?? '—'}
+                  </TableCell>
+                  <TableCell className="px-4 py-3 text-xs text-muted-foreground whitespace-nowrap">
+                    {formatDateTime(click.clickedAt)}
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
+          </TableBody>
+        </Table>
       </div>
 
       {/* Pagination */}
@@ -447,7 +458,7 @@ function RawClicksTab() {
 
 export default function AffiliateReportsPage() {
   return (
-    <div className="p-6 space-y-5">
+    <div className="space-y-4">
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">
           Báo cáo Affiliate

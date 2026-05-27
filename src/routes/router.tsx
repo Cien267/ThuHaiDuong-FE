@@ -37,6 +37,21 @@ const EditChapterPage = lazy(
 const ChapterDetailPage = lazy(
   () => import('@/features/chapters/pages/ChapterDetailPage')
 )
+const AffiliateLinksPage = lazy(
+  () => import('@/features/affiliate/pages/AffiliateLinksPage')
+)
+const AffiliateLinkDetailPage = lazy(
+  () => import('@/features/affiliate/pages/AffiliateLinkDetailPage')
+)
+const AffiliateReportsPage = lazy(
+  () => import('@/features/affiliate/pages/AffiliateReportsPage')
+)
+const CreateAffiliateLinkPage = lazy(
+  () => import('@/features/affiliate/pages/CreateAffiliateLinkPage')
+)
+const EditAffiliateLinkPage = lazy(
+  () => import('@/features/affiliate/pages/EditAffiliateLinkPage')
+)
 
 export const router = createBrowserRouter([
   {
@@ -164,6 +179,51 @@ export const router = createBrowserRouter([
                 element: (
                   <SuspenseWrapper>
                     <EditChapterPage />
+                  </SuspenseWrapper>
+                ),
+              },
+            ],
+          },
+          {
+            path: '/affiliate',
+            children: [
+              {
+                path: 'links',
+                element: (
+                  <SuspenseWrapper>
+                    <AffiliateLinksPage />
+                  </SuspenseWrapper>
+                ),
+              },
+              {
+                path: 'links/:id',
+                element: (
+                  <SuspenseWrapper>
+                    <AffiliateLinkDetailPage />
+                  </SuspenseWrapper>
+                ),
+              },
+              {
+                path: 'links/create',
+                element: (
+                  <SuspenseWrapper>
+                    <CreateAffiliateLinkPage />
+                  </SuspenseWrapper>
+                ),
+              },
+              {
+                path: 'links/:id/edit',
+                element: (
+                  <SuspenseWrapper>
+                    <EditAffiliateLinkPage />
+                  </SuspenseWrapper>
+                ),
+              },
+              {
+                path: 'reports',
+                element: (
+                  <SuspenseWrapper>
+                    <AffiliateReportsPage />
                   </SuspenseWrapper>
                 ),
               },

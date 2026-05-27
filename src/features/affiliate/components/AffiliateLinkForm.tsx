@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useForm, Controller } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { X, Search, Loader2 } from 'lucide-react'
 import { useDebounce } from '@/hooks/useDebounce'
@@ -27,6 +27,14 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
 import { Badge } from '@/components/ui/badge'
 import { useStoryList } from '@/features/stories/hooks/useStories'
 import { useChapterList } from '@/features/chapters/hooks/useChapters'
@@ -43,6 +51,8 @@ import type {
   AffiliateLinkResult,
   AffiliateLinkTargetItem,
 } from '../types/affiliate.types'
+import { DatePicker } from '@/components/common/DatePicker'
+import { InputNumber } from '@/components/common/InputNumber'
 
 // ── Story search combobox ─────────────────────────────────────────────────────
 
@@ -192,13 +202,14 @@ function ChapterSearchBox({
 
   return (
     <div className="space-y-2">
-      <Label>Chapter cụ thể</Label>
-
-      {!hasStories && (
-        <p className="text-xs text-muted-foreground italic">
-          Chọn ít nhất 1 truyện ở trên trước khi chọn chapter
-        </p>
-      )}
+      <Label>
+        Chapter cụ thể{' '}
+        {!hasStories && (
+          <p className="text-xs text-muted-foreground italic">
+            (Chọn ít nhất 1 truyện ở trên trước khi chọn chapter)
+          </p>
+        )}
+      </Label>
 
       {/* Selected chapter tags */}
       {selectedItems.length > 0 && (
@@ -317,13 +328,11 @@ export function AffiliateLinkForm({
   onSubmit,
   isPending,
 }: AffiliateLinkFormProps) {
-  const {
-    register,
-    handleSubmit,
-    control,
-    setValue,
-    formState: { errors },
-  } = useForm<AffiliateLinkFormValues, unknown, AffiliateLinkFormValues>({
+  const form = useForm<
+    AffiliateLinkFormValues,
+    unknown,
+    AffiliateLinkFormValues
+  >({
     resolver: zodResolver(affiliateLinkSchema),
     defaultValues: initialData
       ? {
@@ -352,7 +361,7 @@ export function AffiliateLinkForm({
   const handleAddStory = (item: AffiliateLinkTargetItem) => {
     const next = [...selectedStories, item]
     setSelectedStories(next)
-    setValue(
+    form.setValue(
       'storyIds',
       next.map((s) => s.id)
     )
@@ -361,7 +370,7 @@ export function AffiliateLinkForm({
   const handleRemoveStory = (id: string) => {
     const next = selectedStories.filter((s) => s.id !== id)
     setSelectedStories(next)
-    setValue(
+    form.setValue(
       'storyIds',
       next.map((s) => s.id)
     )
@@ -369,7 +378,7 @@ export function AffiliateLinkForm({
     // Xóa chapter thuộc story bị remove (slug = storyId theo mapping ở FromLink)
     const nextChapters = selectedChapters.filter((c) => c.slug !== id)
     setSelectedChapters(nextChapters)
-    setValue(
+    form.setValue(
       'chapterIds',
       nextChapters.map((c) => c.id)
     )
@@ -378,7 +387,7 @@ export function AffiliateLinkForm({
   const handleAddChapter = (item: AffiliateLinkTargetItem) => {
     const next = [...selectedChapters, item]
     setSelectedChapters(next)
-    setValue(
+    form.setValue(
       'chapterIds',
       next.map((c) => c.id)
     )
@@ -387,7 +396,7 @@ export function AffiliateLinkForm({
   const handleRemoveChapter = (id: string) => {
     const next = selectedChapters.filter((c) => c.id !== id)
     setSelectedChapters(next)
-    setValue(
+    form.setValue(
       'chapterIds',
       next.map((c) => c.id)
     )
@@ -403,197 +412,237 @@ export function AffiliateLinkForm({
   }
 
   return (
-    <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
-      {/* ── Thông tin cơ bản ── */}
-      <div className="rounded-lg border bg-card p-5 space-y-4">
-        <h2 className="font-medium">Thông tin cơ bản</h2>
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(handleFormSubmit)}
+        className="space-y-6"
+      >
+        {/* ── Thông tin cơ bản ── */}
+        <div className=" p-5 space-y-4">
+          <h3 className="font-medium">Thông tin cơ bản</h3>
 
-        <div className="space-y-1.5">
-          <Label htmlFor="name">
-            Tên link <span className="text-destructive">*</span>
-          </Label>
-          <Input
-            id="name"
-            {...register('name')}
-            placeholder="VD: Banner mùa hè sidebar"
-          />
-          {errors.name && (
-            <p className="text-xs text-destructive">{errors.name.message}</p>
-          )}
-        </div>
-
-        <div className="space-y-1.5">
-          <Label htmlFor="targetUrl">
-            URL đích <span className="text-destructive">*</span>
-          </Label>
-          <Input
-            id="targetUrl"
-            {...register('targetUrl')}
-            placeholder="https://..."
-          />
-          {errors.targetUrl && (
-            <p className="text-xs text-destructive">
-              {errors.targetUrl.message}
-            </p>
-          )}
-        </div>
-
-        {!isEdit && (
-          <div className="space-y-1.5">
-            <Label htmlFor="trackingCode">
-              Tracking code{' '}
-              <span className="text-muted-foreground text-xs">
-                (để trống để tự tạo)
-              </span>
-            </Label>
-            <Input
-              id="trackingCode"
-              {...register('trackingCode')}
-              placeholder="VD: summer24"
-              className="font-mono"
-            />
-            {errors.trackingCode && (
-              <p className="text-xs text-destructive">
-                {errors.trackingCode.message}
-              </p>
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Tên link</FormLabel>
+                <FormControl>
+                  <Input placeholder="VD: Banner mùa hè sidebar" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
             )}
-          </div>
-        )}
+          />
 
-        {isEdit && initialData && (
-          <div className="space-y-1.5">
-            <Label>Tracking code</Label>
-            <Input
-              value={initialData.trackingCode}
-              disabled
-              className="font-mono bg-muted text-muted-foreground"
-            />
-            <p className="text-xs text-muted-foreground">
-              Tracking code không thể thay đổi sau khi tạo
-            </p>
-          </div>
-        )}
-      </div>
+          <FormField
+            control={form.control}
+            name="targetUrl"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>URL đích</FormLabel>
+                <FormControl>
+                  <Input placeholder="https://..." {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-      {/* ── Cấu hình hiển thị ── */}
-      <div className="rounded-lg border bg-card p-5 space-y-4">
-        <h2 className="font-medium">Cấu hình hiển thị</h2>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="space-y-1.5">
-            <Label>
-              Vị trí <span className="text-destructive">*</span>
-            </Label>
-            <Controller
-              name="placement"
-              control={control}
+          {!isEdit && (
+            <FormField
+              control={form.control}
+              name="trackingCode"
               render={({ field }) => (
-                <Select value={field.value} onValueChange={field.onChange}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Chọn vị trí" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {AFFILIATE_PLACEMENTS.map((p) => (
-                      <SelectItem key={p} value={p}>
-                        {PLACEMENT_LABELS[p]}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <FormItem>
+                  <FormLabel>
+                    Tracking code
+                    <span className="text-muted-foreground text-xs">
+                      (để trống để tự tạo)
+                    </span>
+                  </FormLabel>
+                  <FormControl>
+                    <Input placeholder="VD: summer24" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
               )}
             />
-            {errors.placement && (
-              <p className="text-xs text-destructive">
-                {errors.placement.message}
-              </p>
-            )}
-          </div>
+          )}
 
-          <div className="space-y-1.5">
-            <Label htmlFor="priority">Độ ưu tiên</Label>
-            <Input
-              id="priority"
-              type="number"
-              {...register('priority')}
-              placeholder="0"
+          {isEdit && initialData && (
+            <FormField
+              control={form.control}
+              name="trackingCode"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Tracking code</FormLabel>
+                  <FormControl>
+                    <Input disabled placeholder="VD: summer24" {...field} />
+                    <p className="text-xs text-muted-foreground">
+                      Tracking code không thể thay đổi sau khi tạo
+                    </p>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-            <p className="text-xs text-muted-foreground">
-              Số càng cao, ưu tiên càng cao
-            </p>
-          </div>
+          )}
         </div>
 
-        <div className="flex items-center justify-between rounded-md border px-4 py-3">
-          <div>
-            <p className="text-sm font-medium">Kích hoạt</p>
-            <p className="text-xs text-muted-foreground">
-              Link có được hiển thị trên site không
-            </p>
+        {/* ── Cấu hình hiển thị ── */}
+        <div className=" p-5 space-y-4">
+          <h3 className="font-medium">Cấu hình hiển thị</h3>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <FormField
+              control={form.control}
+              name="placement"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>
+                    Vị trí <span className="text-destructive">*</span>
+                  </FormLabel>
+                  <FormControl>
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Chọn vị trí" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {AFFILIATE_PLACEMENTS.map((p) => (
+                          <SelectItem key={p} value={p}>
+                            {PLACEMENT_LABELS[p]}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="priority"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>
+                    Độ ưu tiên{' '}
+                    <p className="text-xs text-muted-foreground">
+                      (Số càng cao, ưu tiên càng cao)
+                    </p>
+                  </FormLabel>
+                  <FormControl>
+                    <InputNumber
+                      placeholder="Enter value"
+                      {...field}
+                      allowDecimal={false}
+                      allowNegative={false}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </div>
-          <Controller
+
+          <FormField
+            control={form.control}
             name="isActive"
-            control={control}
             render={({ field }) => (
-              <Switch checked={field.value} onCheckedChange={field.onChange} />
+              <FormItem>
+                <FormLabel>Kích hoạt</FormLabel>
+                <FormControl>
+                  <Switch
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
             )}
           />
-        </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="space-y-1.5">
-            <Label htmlFor="startDate">Ngày bắt đầu</Label>
-            <Input id="startDate" type="date" {...register('startDate')} />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <FormField
+              control={form.control}
+              name="startDate"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="w-full">Ngày bắt đầu</FormLabel>
+                  <FormControl>
+                    <DatePicker
+                      value={field.value ? new Date(field.value) : undefined}
+                      onChange={field.onChange}
+                      placeholder="Pick a date"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="endDate"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="w-full">Ngày kết thúc</FormLabel>
+                  <FormControl>
+                    <DatePicker
+                      value={field.value ? new Date(field.value) : undefined}
+                      onChange={field.onChange}
+                      placeholder="Pick a date"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </div>
-          <div className="space-y-1.5">
-            <Label htmlFor="endDate">Ngày kết thúc</Label>
-            <Input id="endDate" type="date" {...register('endDate')} />
-            {errors.endDate && (
-              <p className="text-xs text-destructive">
-                {errors.endDate.message}
-              </p>
-            )}
+        </div>
+
+        {/* ── Phạm vi hiển thị ── */}
+        <div className=" p-5 space-y-4">
+          <div>
+            <h3 className="font-medium">Phạm vi hiển thị</h3>
+            <p className="text-sm text-muted-foreground mt-0.5">
+              Để trống = hiển thị toàn cục. Chọn truyện trước, sau đó có thể thu
+              hẹp xuống chapter cụ thể.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <StorySearchBox
+              selectedItems={selectedStories}
+              onAdd={handleAddStory}
+              onRemove={handleRemoveStory}
+            />
+
+            <ChapterSearchBox
+              selectedStories={selectedStories}
+              selectedItems={selectedChapters}
+              onAdd={handleAddChapter}
+              onRemove={handleRemoveChapter}
+            />
           </div>
         </div>
-      </div>
 
-      {/* ── Phạm vi hiển thị ── */}
-      <div className="rounded-lg border bg-card p-5 space-y-4">
-        <div>
-          <h2 className="font-medium">Phạm vi hiển thị</h2>
-          <p className="text-sm text-muted-foreground mt-0.5">
-            Để trống = hiển thị toàn cục. Chọn truyện trước, sau đó có thể thu
-            hẹp xuống chapter cụ thể.
-          </p>
+        {/* Submit */}
+        <div className="flex justify-end gap-3">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => window.history.back()}
+          >
+            Hủy
+          </Button>
+          <Button type="submit" disabled={isPending}>
+            {isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+            {isEdit ? 'Lưu thay đổi' : 'Tạo link'}
+          </Button>
         </div>
-
-        <StorySearchBox
-          selectedItems={selectedStories}
-          onAdd={handleAddStory}
-          onRemove={handleRemoveStory}
-        />
-
-        <ChapterSearchBox
-          selectedStories={selectedStories}
-          selectedItems={selectedChapters}
-          onAdd={handleAddChapter}
-          onRemove={handleRemoveChapter}
-        />
-      </div>
-
-      {/* Submit */}
-      <div className="flex justify-end gap-3">
-        <Button
-          type="button"
-          variant="outline"
-          onClick={() => window.history.back()}
-        >
-          Hủy
-        </Button>
-        <Button type="submit" disabled={isPending}>
-          {isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-          {isEdit ? 'Lưu thay đổi' : 'Tạo link'}
-        </Button>
-      </div>
-    </form>
+      </form>
+    </Form>
   )
 }

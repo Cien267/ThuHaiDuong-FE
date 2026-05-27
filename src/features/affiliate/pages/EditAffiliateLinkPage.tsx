@@ -70,3 +70,5 @@ export function EditAffiliateLinkPage() {
     </div>
   )
 }
+
+export default EditAffiliateLinkPage

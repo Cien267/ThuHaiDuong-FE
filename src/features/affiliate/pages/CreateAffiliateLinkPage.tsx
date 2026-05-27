@@ -25,7 +25,7 @@ export function CreateAffiliateLinkPage() {
   }
 
   return (
-    <div className="p-6 max-w-3xl mx-auto space-y-5">
+    <div className="max-w-full space-y-4">
       <div className="flex items-center gap-3">
         <Button
           variant="ghost"
@@ -51,3 +51,5 @@ export function CreateAffiliateLinkPage() {
     </div>
   )
 }
+
+export default CreateAffiliateLinkPage

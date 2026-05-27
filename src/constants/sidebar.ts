@@ -5,9 +5,6 @@ import {
   Users,
   Tag,
   Folder,
-  MessageSquare,
-  Star,
-  Bookmark,
   CreditCard,
   BarChart3,
   MousePointerClick,
@@ -67,33 +64,6 @@ export const SIDEBAR_MENU: MenuItem[] = [
   },
 
   {
-    id: 'engagement',
-    label: 'Tương tác',
-    icon: MessageSquare,
-    path: '/engagement',
-    children: [
-      {
-        id: 'comments',
-        label: 'Bình luận',
-        icon: MessageSquare,
-        path: '/comments',
-      },
-      {
-        id: 'ratings',
-        label: 'Đánh giá',
-        icon: Star,
-        path: '/ratings',
-      },
-      {
-        id: 'bookmarks',
-        label: 'Lưu truyện',
-        icon: Bookmark,
-        path: '/bookmarks',
-      },
-    ],
-  },
-
-  {
     id: 'users',
     label: 'Người dùng',
     icon: Users,
@@ -133,10 +103,10 @@ export const SIDEBAR_MENU: MenuItem[] = [
         path: '/affiliate/links',
       },
       {
-        id: 'affiliate-clicks',
-        label: 'Lượt click',
+        id: 'affiliate-reports',
+        label: 'Báo cáo',
         icon: BarChart3,
-        path: '/affiliate/clicks',
+        path: '/affiliate/reports',
       },
     ],
   },
