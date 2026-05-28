@@ -44,7 +44,7 @@ export const useCreateAffiliateLink = () => {
     onSuccess: (result) => {
       queryClient.invalidateQueries({ queryKey: AFFILIATE_QUERY_KEYS.links() })
       toast.success('Đã tạo affiliate link')
-      navigate(`/admin/affiliate/links/${result.id}`)
+      navigate(`/affiliate/links/${result.id}`)
     },
     onError: () => toast.error('Có lỗi xảy ra, vui lòng thử lại'),
   })
@@ -62,7 +62,7 @@ export const useUpdateAffiliateLink = (id: string) => {
         queryKey: AFFILIATE_QUERY_KEYS.linkDetail(id),
       })
       toast.success('Đã cập nhật affiliate link')
-      navigate(`/admin/affiliate/links/${id}`)
+      navigate(`/affiliate/links/${id}`)
     },
     onError: () => toast.error('Có lỗi xảy ra, vui lòng thử lại'),
   })
@@ -76,7 +76,7 @@ export const useDeleteAffiliateLink = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: AFFILIATE_QUERY_KEYS.links() })
       toast.success('Đã xóa affiliate link')
-      navigate('/admin/affiliate/links')
+      navigate('/affiliate/links')
     },
     onError: () => toast.error('Có lỗi xảy ra, vui lòng thử lại'),
   })

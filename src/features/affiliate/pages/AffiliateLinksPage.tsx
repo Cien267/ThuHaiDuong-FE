@@ -214,7 +214,7 @@ export default function AffiliateLinksPage() {
                 <TableRow
                   key={link.id}
                   className="hover:bg-muted/20 cursor-pointer"
-                  onClick={() => navigate(`/admin/affiliate/links/${link.id}`)}
+                  onClick={() => navigate(`/affiliate/links/${link.id}`)}
                 >
                   <TableCell className="px-4 py-3">
                     <div>
@@ -271,9 +271,7 @@ export default function AffiliateLinksPage() {
                               size="icon"
                               className="h-8 w-8"
                               onClick={() =>
-                                navigate(
-                                  `/admin/affiliate/links/${link.id}/edit`
-                                )
+                                navigate(`/affiliate/links/${link.id}/edit`)
                               }
                             >
                               <Pencil className="h-4 w-4" />

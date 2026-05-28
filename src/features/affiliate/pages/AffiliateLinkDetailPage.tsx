@@ -22,6 +22,7 @@ import {
   AffiliateLinkStatusBadge,
   PlacementBadge,
 } from '../components/AffiliateLinkStatusBadge'
+import { formatDate } from '@/lib/utils'
 
 function InfoRow({
   label,
@@ -38,17 +39,6 @@ function InfoRow({
       <div className="text-sm flex-1">{children}</div>
     </div>
   )
-}
-
-function formatDateTime(dateStr: string | null) {
-  if (!dateStr) return '—'
-  return new Date(dateStr).toLocaleString('vi-VN', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  })
 }
 
 export default function AffiliateLinkDetailPage() {
@@ -78,14 +68,14 @@ export default function AffiliateLinkDetailPage() {
   }
 
   return (
-    <div className="p-6 max-w-4xl mx-auto space-y-5">
+    <div className="max-w-full mx-auto space-y-4">
       {/* Header */}
       <div className="flex items-start justify-between gap-4">
         <div className="flex items-center gap-3">
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => navigate('/admin/affiliate/links')}
+            onClick={() => navigate('/affiliate/links')}
           >
             <ArrowLeft className="h-4 w-4" />
           </Button>
@@ -102,7 +92,7 @@ export default function AffiliateLinkDetailPage() {
         <div className="flex gap-2 shrink-0">
           <Button
             variant="outline"
-            onClick={() => navigate(`/admin/affiliate/links/${id}/edit`)}
+            onClick={() => navigate(`/affiliate/links/${id}/edit`)}
           >
             <Pencil className="h-4 w-4 mr-2" />
             Chỉnh sửa
@@ -204,16 +194,17 @@ export default function AffiliateLinkDetailPage() {
         <InfoRow label="Thời gian">
           {link.startDate || link.endDate ? (
             <span>
-              {formatDateTime(link.startDate)} → {formatDateTime(link.endDate)}
+              {formatDate(new Date(link.startDate ?? ''))} →{' '}
+              {formatDate(new Date(link.endDate ?? ''))}
             </span>
           ) : (
             <span className="text-muted-foreground">Không giới hạn</span>
           )}
         </InfoRow>
 
-        <InfoRow label="Ngày tạo">{formatDateTime(link.createdAt)}</InfoRow>
+        <InfoRow label="Ngày tạo">{formatDate(link.createdAt)}</InfoRow>
         <InfoRow label="Cập nhật lần cuối">
-          {formatDateTime(link.updatedAt)}
+          {formatDate(link.updatedAt)}
         </InfoRow>
       </div>
 
@@ -237,7 +228,7 @@ export default function AffiliateLinkDetailPage() {
                   variant="ghost"
                   size="sm"
                   className="text-xs text-muted-foreground"
-                  onClick={() => navigate(`/admin/stories/${story.id}`)}
+                  onClick={() => navigate(`/content/stories/${story.id}`)}
                 >
                   Xem truyện
                 </Button>
@@ -263,14 +254,6 @@ export default function AffiliateLinkDetailPage() {
                 className="flex items-center justify-between py-2 border-b last:border-0"
               >
                 <span className="text-sm">{chapter.title}</span>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-xs text-muted-foreground"
-                  onClick={() => navigate(`/admin/chapters/${chapter.id}`)}
-                >
-                  Xem chapter
-                </Button>
               </div>
             ))}
           </div>

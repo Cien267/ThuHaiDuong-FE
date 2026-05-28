@@ -478,10 +478,12 @@ export function AffiliateLinkForm({
                 <FormItem>
                   <FormLabel>Tracking code</FormLabel>
                   <FormControl>
-                    <Input disabled placeholder="VD: summer24" {...field} />
-                    <p className="text-xs text-muted-foreground">
-                      Tracking code không thể thay đổi sau khi tạo
-                    </p>
+                    <div>
+                      <Input disabled placeholder="VD: summer24" {...field} />
+                      <p className="text-xs text-muted-foreground">
+                        Tracking code không thể thay đổi sau khi tạo
+                      </p>
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -574,7 +576,7 @@ export function AffiliateLinkForm({
                   <FormControl>
                     <DatePicker
                       value={field.value ? new Date(field.value) : undefined}
-                      onChange={field.onChange}
+                      onChange={(date) => field.onChange(date?.toISOString())}
                       placeholder="Pick a date"
                     />
                   </FormControl>
@@ -591,7 +593,7 @@ export function AffiliateLinkForm({
                   <FormControl>
                     <DatePicker
                       value={field.value ? new Date(field.value) : undefined}
-                      onChange={field.onChange}
+                      onChange={(date) => field.onChange(date?.toISOString())}
                       placeholder="Pick a date"
                     />
                   </FormControl>
@@ -637,7 +639,7 @@ export function AffiliateLinkForm({
           >
             Hủy
           </Button>
-          <Button type="submit" disabled={isPending}>
+          <Button variant={'greenShiny'} type="submit" disabled={isPending}>
             {isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
             {isEdit ? 'Lưu thay đổi' : 'Tạo link'}
           </Button>

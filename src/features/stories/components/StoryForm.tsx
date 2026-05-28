@@ -346,7 +346,7 @@ export const StoryForm = ({
                     <FormControl>
                       <DatePicker
                         value={field.value ? new Date(field.value) : undefined}
-                        onChange={field.onChange}
+                        onChange={(date) => field.onChange(date?.toISOString())}
                         placeholder="Pick a date"
                       />
                     </FormControl>
