@@ -66,7 +66,7 @@ export const ChapterDetailPage = () => {
     )
   }
 
-  if (!chapter) return <Navigate to="/admin/stories" replace />
+  if (!chapter) return <Navigate to="/content/stories" replace />
 
   return (
     <div className="space-y-5 max-w-full mx-auto">

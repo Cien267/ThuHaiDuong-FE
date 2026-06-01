@@ -5,8 +5,6 @@ import { PublicRoute } from './PublicRoute'
 import { DefaultLayout } from '@/layouts/DefaultLayout'
 import { SuspenseWrapper } from '@/components/common//SuspenseWrapper'
 import ErrorPage from '@/pages/ErrorPage'
-import { HomePage } from '@/features/home/pages/HomePage'
-
 const LoginPage = lazy(() => import('@/features/auth/pages/LoginPage'))
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'))
 const CategoriesPage = lazy(
@@ -52,6 +50,18 @@ const CreateAffiliateLinkPage = lazy(
 const EditAffiliateLinkPage = lazy(
   () => import('@/features/affiliate/pages/EditAffiliateLinkPage')
 )
+const AnalyticsDashboardPage = lazy(
+  () => import('@/features/analytics/pages/AnalyticsDashboardPage')
+)
+const StoryAnalyticsPage = lazy(
+  () => import('@/features/analytics/pages/StoryAnalyticsPage')
+)
+const TopChaptersPage = lazy(
+  () => import('@/features/analytics/pages/TopChaptersPage')
+)
+const TopStoriesPage = lazy(
+  () => import('@/features/analytics/pages/TopStoriesPage')
+)
 
 export const router = createBrowserRouter([
   {
@@ -83,7 +93,7 @@ export const router = createBrowserRouter([
             path: '/home',
             element: (
               <SuspenseWrapper>
-                <HomePage />
+                <AnalyticsDashboardPage />
               </SuspenseWrapper>
             ),
           },
@@ -224,6 +234,36 @@ export const router = createBrowserRouter([
                 element: (
                   <SuspenseWrapper>
                     <AffiliateReportsPage />
+                  </SuspenseWrapper>
+                ),
+              },
+            ],
+          },
+
+          {
+            path: '/analytics',
+            children: [
+              {
+                path: 'top-stories',
+                element: (
+                  <SuspenseWrapper>
+                    <TopStoriesPage />
+                  </SuspenseWrapper>
+                ),
+              },
+              {
+                path: 'top-chapters',
+                element: (
+                  <SuspenseWrapper>
+                    <TopChaptersPage />
+                  </SuspenseWrapper>
+                ),
+              },
+              {
+                path: 'stories/:storyId',
+                element: (
+                  <SuspenseWrapper>
+                    <StoryAnalyticsPage />
                   </SuspenseWrapper>
                 ),
               },

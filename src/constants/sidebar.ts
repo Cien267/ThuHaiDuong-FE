@@ -118,22 +118,16 @@ export const SIDEBAR_MENU: MenuItem[] = [
     path: '/analytics',
     children: [
       {
-        id: 'story-stats',
-        label: 'Thống kê truyện',
+        id: 'top-story',
+        label: 'Top truyện',
         icon: BarChart3,
-        path: '/analytics/stories',
+        path: '/analytics/top-stories',
       },
       {
-        id: 'chapter-views',
-        label: 'Lượt xem chương',
+        id: 'top-chapters',
+        label: 'Top chương',
         icon: LineChart,
-        path: '/analytics/chapters',
-      },
-      {
-        id: 'daily-stats',
-        label: 'Thống kê theo ngày',
-        icon: LineChart,
-        path: '/analytics/daily',
+        path: '/analytics/top-chapters',
       },
     ],
   },

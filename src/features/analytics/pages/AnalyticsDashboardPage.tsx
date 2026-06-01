@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
 import { OverviewCards } from '../components/OverviewCards'
@@ -14,6 +13,7 @@ import {
   useTopStories,
 } from '../hooks/useAnalytics'
 import type { SiteOverviewQuery } from '../types/analytics.types'
+import { DatePicker } from '@/components/common/DatePicker'
 
 function defaultRange(): SiteOverviewQuery {
   const to = new Date()
@@ -52,7 +52,7 @@ export default function AnalyticsDashboardPage() {
       : '30 ngày'
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="space-y-4">
       {/* Header */}
       <div className="flex items-end justify-between flex-wrap gap-4">
         <div>
@@ -66,24 +66,22 @@ export default function AnalyticsDashboardPage() {
         <div className="flex items-end gap-3 flex-wrap">
           <div className="space-y-1">
             <Label className="text-xs">Từ ngày</Label>
-            <Input
-              type="date"
-              className="w-36 h-8 text-sm"
-              value={dateRange.from ?? ''}
-              onChange={(e) =>
-                setDateRange((prev) => ({ ...prev, from: e.target.value }))
+            <DatePicker
+              value={dateRange.from ? new Date(dateRange.from) : undefined}
+              onChange={(date: Date | undefined) =>
+                setDateRange((prev) => ({ ...prev, from: date?.toISOString() }))
               }
+              placeholder="Pick a date"
             />
           </div>
           <div className="space-y-1">
             <Label className="text-xs">Đến ngày</Label>
-            <Input
-              type="date"
-              className="w-36 h-8 text-sm"
-              value={dateRange.to ?? ''}
-              onChange={(e) =>
-                setDateRange((prev) => ({ ...prev, to: e.target.value }))
+            <DatePicker
+              value={dateRange.to ? new Date(dateRange.to) : undefined}
+              onChange={(date: Date | undefined) =>
+                setDateRange((prev) => ({ ...prev, to: date?.toISOString() }))
               }
+              placeholder="Pick a date"
             />
           </div>
           <Button
@@ -127,7 +125,7 @@ export default function AnalyticsDashboardPage() {
               variant="ghost"
               size="sm"
               className="text-xs text-muted-foreground"
-              onClick={() => navigate('/admin/analytics/stories')}
+              onClick={() => navigate('/analytics/top-stories')}
             >
               Xem tất cả →
             </Button>
@@ -143,7 +141,7 @@ export default function AnalyticsDashboardPage() {
               variant="ghost"
               size="sm"
               className="text-xs text-muted-foreground"
-              onClick={() => navigate('/admin/analytics/chapters')}
+              onClick={() => navigate('/analytics/top-chapters')}
             >
               Xem tất cả →
             </Button>

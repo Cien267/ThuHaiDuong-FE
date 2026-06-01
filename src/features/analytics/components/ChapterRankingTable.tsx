@@ -57,7 +57,9 @@ export function ChapterRankingTable({
                   key={chapter.chapterId}
                   className="hover:bg-muted/20 cursor-pointer"
                   onClick={() =>
-                    navigate(`/admin/chapters/${chapter.chapterId}`)
+                    navigate(
+                      `content/stories/${chapter.storyId}/chapters/${chapter.chapterId}`
+                    )
                   }
                 >
                   <td className="px-4 py-3">
@@ -85,7 +87,7 @@ export function ChapterRankingTable({
                       className="text-muted-foreground hover:text-foreground text-xs underline-offset-2 hover:underline truncate max-w-[180px] block text-left"
                       onClick={(e) => {
                         e.stopPropagation()
-                        navigate(`/admin/stories/${chapter.storyId}`)
+                        navigate(`/content/stories/${chapter.storyId}`)
                       }}
                     >
                       {chapter.storyTitle}

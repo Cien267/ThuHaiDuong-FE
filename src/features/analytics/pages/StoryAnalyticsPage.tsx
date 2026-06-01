@@ -65,7 +65,7 @@ export default function StoryAnalyticsPage() {
           variant="outline"
           size="sm"
           className="ml-auto shrink-0"
-          onClick={() => navigate(`/admin/stories/${storyId}`)}
+          onClick={() => navigate(`/content/stories/${storyId}`)}
         >
           Xem truyện
         </Button>

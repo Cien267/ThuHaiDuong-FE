@@ -66,7 +66,7 @@ export function StoryRankingTable({
                 <tr
                   key={story.storyId}
                   className="hover:bg-muted/20 cursor-pointer"
-                  onClick={() => navigate(`/admin/stories/${story.storyId}`)}
+                  onClick={() => navigate(`analytics/stories/${story.storyId}`)}
                 >
                   <td className="px-4 py-3">
                     <span
