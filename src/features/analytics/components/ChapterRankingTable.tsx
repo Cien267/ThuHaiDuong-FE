@@ -58,7 +58,7 @@ export function ChapterRankingTable({
                   className="hover:bg-muted/20 cursor-pointer"
                   onClick={() =>
                     navigate(
-                      `content/stories/${chapter.storyId}/chapters/${chapter.chapterId}`
+                      `/content/stories/${chapter.storyId}/chapters/${chapter.chapterId}`
                     )
                   }
                 >

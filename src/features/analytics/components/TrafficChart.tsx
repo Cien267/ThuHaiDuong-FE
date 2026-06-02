@@ -51,7 +51,7 @@ export function TrafficChart({ data }: TrafficChartProps) {
   return (
     <div className="rounded-lg border bg-card p-5 space-y-4">
       <div className="flex items-center justify-between flex-wrap gap-2">
-        <h2 className="font-medium">Traffic theo ngày</h2>
+        <h4 className="font-medium">Traffic theo ngày</h4>
         <div className="flex flex-wrap gap-1.5">
           {METRICS.map((m) => (
             <button

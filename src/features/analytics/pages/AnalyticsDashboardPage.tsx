@@ -120,7 +120,7 @@ export default function AnalyticsDashboardPage() {
         {/* Top stories */}
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <h2 className="font-medium">Truyện hot tuần này</h2>
+            <h4 className="font-medium">Truyện hot tuần này</h4>
             <Button
               variant="ghost"
               size="sm"
@@ -136,7 +136,7 @@ export default function AnalyticsDashboardPage() {
         {/* Top chapters */}
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <h2 className="font-medium">Chapter hot nhất</h2>
+            <h4 className="font-medium">Chapter hot nhất</h4>
             <Button
               variant="ghost"
               size="sm"
