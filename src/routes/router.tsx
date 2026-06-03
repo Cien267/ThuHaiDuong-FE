@@ -62,6 +62,7 @@ const TopChaptersPage = lazy(
 const TopStoriesPage = lazy(
   () => import('@/features/analytics/pages/TopStoriesPage')
 )
+const StaffPage = lazy(() => import('@/features/users/pages/StaffPage'))
 
 export const router = createBrowserRouter([
   {
@@ -264,6 +265,19 @@ export const router = createBrowserRouter([
                 element: (
                   <SuspenseWrapper>
                     <StoryAnalyticsPage />
+                  </SuspenseWrapper>
+                ),
+              },
+            ],
+          },
+          {
+            path: '/users',
+            children: [
+              {
+                path: '',
+                element: (
+                  <SuspenseWrapper>
+                    <StaffPage />
                   </SuspenseWrapper>
                 ),
               },
