@@ -1,3 +1,5 @@
+import type { UserRole } from '@/features/auth/types/auth.types'
+
 export interface StaffProfileResult {
   id: string
   userName: string
@@ -5,7 +7,7 @@ export interface StaffProfileResult {
   fullName: string | null
   phoneNumber: string | null
   avatar: string | null
-  role: string
+  role: UserRole
   lastLoginAt: string | null
   createdAt: string
 }

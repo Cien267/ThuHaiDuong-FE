@@ -63,6 +63,7 @@ const TopStoriesPage = lazy(
   () => import('@/features/analytics/pages/TopStoriesPage')
 )
 const StaffPage = lazy(() => import('@/features/users/pages/StaffPage'))
+const ProfilePage = lazy(() => import('@/features/profile/pages/ProfilePage'))
 
 export const router = createBrowserRouter([
   {
@@ -95,6 +96,14 @@ export const router = createBrowserRouter([
             element: (
               <SuspenseWrapper>
                 <AnalyticsDashboardPage />
+              </SuspenseWrapper>
+            ),
+          },
+          {
+            path: '/profile',
+            element: (
+              <SuspenseWrapper>
+                <ProfilePage />
               </SuspenseWrapper>
             ),
           },

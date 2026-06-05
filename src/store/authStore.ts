@@ -12,6 +12,7 @@ import {
   getUserFromToken,
   isTokenValid,
 } from '@/features/auth/utils/token'
+import type { StaffProfileResult } from '@/features/profile/types/profile.types'
 
 interface AuthState {
   user: UserAuthInfo | null
@@ -26,7 +27,7 @@ interface AuthState {
     accessToken: string,
     refreshToken: string
   ) => void
-  setProfile: (profile: UserProfile) => void
+  setProfile: (profile: StaffProfileResult) => void
   updateUserInfo: (partial: Partial<UserAuthInfo>) => void
   logout: () => void
   hasRole: (requiredRole: UserRole) => boolean

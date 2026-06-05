@@ -213,7 +213,11 @@ function ProfileForm({ defaultValues }: ProfileFormProps) {
       </div>
 
       <div className="flex justify-end">
-        <Button type="submit" disabled={!isDirty || updateProfile.isPending}>
+        <Button
+          variant={'greenShiny'}
+          type="submit"
+          disabled={!isDirty || updateProfile.isPending}
+        >
           {updateProfile.isPending && (
             <Loader2 className="h-4 w-4 mr-2 animate-spin" />
           )}
@@ -268,7 +272,7 @@ function UsernameForm({ currentUsername }: UsernameFormProps) {
       <div className="flex justify-end">
         <Button
           type="submit"
-          variant="outline"
+          variant={'greenShiny'}
           disabled={!isDirty || updateUsername.isPending}
         >
           {updateUsername.isPending && (
@@ -312,7 +316,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="p-6 max-w-2xl mx-auto space-y-6">
+    <div className="max-w-full mx-auto space-y-4">
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">Hồ sơ cá nhân</h1>
         <p className="text-sm text-muted-foreground mt-1">

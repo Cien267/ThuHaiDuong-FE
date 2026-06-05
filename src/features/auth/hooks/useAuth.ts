@@ -2,13 +2,12 @@ import { useEffect } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
+import { profileService } from '@/features/profile/services/profileService'
 import { authService } from '../services/authService'
 import useAuthStore from '@/store/authStore'
 import type {
   LoginInput,
   ChangePasswordInput,
-  UpdateProfileInput,
-  UpdateUsernameInput,
   UserRole,
 } from '../types/auth.types'
 
@@ -26,7 +25,6 @@ export const useAuth = () => {
     isInitialized,
     setAuthFromResult,
     setProfile,
-    updateUserInfo,
     logout: logoutStore,
     hasRole,
     hasMinRole,
@@ -35,7 +33,7 @@ export const useAuth = () => {
   // Fetch profile after login
   const profileQuery = useQuery({
     queryKey: authKeys.profile(),
-    queryFn: authService.getProfile,
+    queryFn: profileService.getMyProfile,
     enabled: isAuthenticated && isInitialized,
     staleTime: 1000 * 60 * 5,
     retry: 1,
@@ -67,29 +65,6 @@ export const useAuth = () => {
     },
     onError: (error: any) => {
       console.error('Logout error:', error)
-    },
-  })
-
-  const updateProfileMutation = useMutation({
-    mutationFn: (data: UpdateProfileInput) => authService.updateProfile(data),
-    onSuccess: (updatedProfile) => {
-      setProfile(updatedProfile)
-      toast.success('Profile updated successfully.')
-    },
-    onError: (error: any) => {
-      toast.error(error?.message ?? 'Failed to update profile.')
-    },
-  })
-
-  const updateUsernameMutation = useMutation({
-    mutationFn: (data: UpdateUsernameInput) => authService.updateUsername(data),
-    onSuccess: (updatedProfile) => {
-      setProfile(updatedProfile)
-      updateUserInfo({ userName: updatedProfile.userName })
-      toast.success('Username updated successfully.')
-    },
-    onError: (error: any) => {
-      toast.error(error?.message ?? 'Failed to update username.')
     },
   })
 
@@ -129,15 +104,6 @@ export const useAuth = () => {
     // ── Logout ────────────────────────────────────────────────────────────────
     logout: logoutMutation.mutate,
     isLoggingOut: logoutMutation.isPending,
-
-    // ── Profile ───────────────────────────────────────────────────────────────
-    updateProfile: updateProfileMutation.mutate,
-    updateProfileAsync: updateProfileMutation.mutateAsync,
-    isUpdatingProfile: updateProfileMutation.isPending,
-
-    updateUsername: updateUsernameMutation.mutate,
-    updateUsernameAsync: updateUsernameMutation.mutateAsync,
-    isUpdatingUsername: updateUsernameMutation.isPending,
 
     // ── Password ──────────────────────────────────────────────────────────────
     changePassword: changePasswordMutation.mutate,

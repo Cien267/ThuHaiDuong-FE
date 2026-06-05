@@ -9,17 +9,18 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { useNavigate } from 'react-router-dom'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Separator } from '@/components/ui/separator'
 import { useAuth } from '@/features/auth/hooks/useAuth'
 import { useTheme } from '@/hooks/useTheme'
 import { HeaderBreadcrumb } from '@/components/common/layouts/Header/Breadcrumb'
-import { openEditProfileModal } from './Profile'
 
 export const Header: React.FC = () => {
   const { user, logout } = useAuth()
   const { theme, setTheme } = useTheme()
+  const navigate = useNavigate()
 
   const getUserInitials = () => {
     if (!user?.fullName) return 'Admin'
@@ -86,7 +87,7 @@ export const Header: React.FC = () => {
             <DropdownMenuGroup>
               <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
                 <User className="mr-2 h-4 w-4" />
-                <span className="w-full" onClick={openEditProfileModal}>
+                <span className="w-full" onClick={() => navigate('/profile')}>
                   Tài khoản
                 </span>
               </DropdownMenuItem>
