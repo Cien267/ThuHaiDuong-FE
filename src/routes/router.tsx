@@ -64,6 +64,9 @@ const TopStoriesPage = lazy(
 )
 const StaffPage = lazy(() => import('@/features/users/pages/StaffPage'))
 const ProfilePage = lazy(() => import('@/features/profile/pages/ProfilePage'))
+const SettingsPage = lazy(
+  () => import('@/features/settings/pages/SettingsPage')
+)
 
 export const router = createBrowserRouter([
   {
@@ -287,6 +290,19 @@ export const router = createBrowserRouter([
                 element: (
                   <SuspenseWrapper>
                     <StaffPage />
+                  </SuspenseWrapper>
+                ),
+              },
+            ],
+          },
+          {
+            path: '/settings',
+            children: [
+              {
+                path: '',
+                element: (
+                  <SuspenseWrapper>
+                    <SettingsPage />
                   </SuspenseWrapper>
                 ),
               },
