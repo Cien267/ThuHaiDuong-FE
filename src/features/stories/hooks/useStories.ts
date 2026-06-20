@@ -92,6 +92,14 @@ export const useUpdateStory = (id: string) => {
   })
 }
 
+// ── Upload story cover ─────────────────────────────────────────────────────────────────────
+
+export const useUploadStoryCover = () =>
+  useMutation({
+    mutationFn: (file: File) => storyService.uploadStoryCover(file),
+    onError: () => toast.error('Upload ảnh bìa thất bại, vui lòng thử lại'),
+  })
+
 // ── Submit for review ──────────────────────────────────────────────────────────
 
 export const useSubmitForReview = (id: string) => {

@@ -32,6 +32,18 @@ export const storyService = {
   update: (id: string, data: StoryFormValues): Promise<StoryAdminResult> =>
     api.put(`portal/stories/${id}`, data).then((r) => r.data),
 
+  uploadStoryCover: (file: File): Promise<string> => {
+    const formData = new FormData()
+    formData.append('file', file)
+    return api
+      .post<{
+        coverImageUrl: string
+      }>('portal/stories/upload-cover', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      })
+      .then((r) => r.data.coverImageUrl)
+  },
+
   // ── Submit for review (Portal) ─────────────────────────────────────────────
   submitForReview: (id: string): Promise<void> =>
     api.post(`portal/stories/${id}/submit`).then(() => undefined),

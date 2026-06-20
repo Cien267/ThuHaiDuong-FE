@@ -32,6 +32,7 @@ import { useCategoryTree } from '@/features/categories/hooks/useCategories'
 import { useTagList } from '@/features/categories/hooks/useCategories'
 import type { StoryFormValues, StoryAdminResult } from '../types/story.types'
 import { DatePicker } from '@/components/common/DatePicker'
+import { CoverImageUpload } from '../components/CoverImageUpload'
 
 interface StoryFormProps {
   initialData?: StoryAdminResult
@@ -77,7 +78,6 @@ export const StoryForm = ({
   })
 
   const storyType = form.watch('storyType')
-  const coverUrl = form.watch('coverImageUrl')
 
   useEffect(() => {
     if (initialData) {
@@ -220,33 +220,7 @@ export const StoryForm = ({
         </div>
 
         {/* ── Cover image ─────────────────────────────────────────────────────── */}
-        <FormField
-          control={form.control}
-          name="coverImageUrl"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Cover Image URL</FormLabel>
-              <div className="flex gap-3 items-start">
-                <FormControl>
-                  <Input
-                    placeholder="https://..."
-                    {...field}
-                    className="flex-1"
-                  />
-                </FormControl>
-                {coverUrl && (
-                  <img
-                    src={coverUrl}
-                    alt="Cover preview"
-                    className="h-20 w-14 rounded object-cover border flex-shrink-0"
-                    onError={(e) => (e.currentTarget.style.display = 'none')}
-                  />
-                )}
-              </div>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <CoverImageUpload />
 
         {/* ── Description ─────────────────────────────────────────────────────── */}
         <FormField
