@@ -374,15 +374,11 @@ export const StoryDetailPage = () => {
         <div className="space-y-4">
           {/* Cover */}
           {story.coverImageUrl && (
-            <Card>
-              <CardContent className="pt-4">
-                <img
-                  src={story.coverImageUrl}
-                  alt={story.title}
-                  className="w-full rounded object-cover max-h-72"
-                />
-              </CardContent>
-            </Card>
+            <img
+              src={story.coverImageUrl}
+              alt={story.title}
+              className="w-full rounded-xl object-cover max-h-72"
+            />
           )}
 
           {/* Metadata */}
