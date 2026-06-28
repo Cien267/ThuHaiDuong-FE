@@ -27,6 +27,7 @@ export const SIDEBAR_MENU: MenuItem[] = [
     label: 'Tổng quan',
     icon: LayoutDashboard,
     path: '/home',
+    roles: ['SuperAdmin', 'Admin'],
   },
 
   {
@@ -67,12 +68,14 @@ export const SIDEBAR_MENU: MenuItem[] = [
     label: 'Người dùng',
     icon: Users,
     path: '/users',
+    roles: ['SuperAdmin'],
     children: [
       {
         id: 'user-list',
         label: 'Danh sách người dùng',
         icon: Users,
         path: '/users',
+        roles: ['SuperAdmin'],
       },
     ],
   },
@@ -82,18 +85,21 @@ export const SIDEBAR_MENU: MenuItem[] = [
     label: 'Affiliate',
     icon: MousePointerClick,
     path: '/affiliate',
+    roles: ['SuperAdmin'],
     children: [
       {
         id: 'affiliate-links',
         label: 'Link Affiliate',
         icon: MousePointerClick,
         path: '/affiliate/links',
+        roles: ['SuperAdmin'],
       },
       {
         id: 'affiliate-reports',
         label: 'Báo cáo',
         icon: BarChart3,
         path: '/affiliate/reports',
+        roles: ['SuperAdmin'],
       },
     ],
   },
@@ -103,18 +109,21 @@ export const SIDEBAR_MENU: MenuItem[] = [
     label: 'Thống kê',
     icon: LineChart,
     path: '/analytics',
+    roles: ['SuperAdmin', 'Admin'],
     children: [
       {
         id: 'top-story',
         label: 'Top truyện',
         icon: BarChart3,
         path: '/analytics/top-stories',
+        roles: ['SuperAdmin', 'Admin'],
       },
       {
         id: 'top-chapters',
         label: 'Top chương',
         icon: LineChart,
         path: '/analytics/top-chapters',
+        roles: ['SuperAdmin', 'Admin'],
       },
     ],
   },
