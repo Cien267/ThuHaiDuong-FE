@@ -2,17 +2,17 @@ import { createBrowserRouter, Navigate } from 'react-router-dom'
 import { lazy } from 'react'
 import { PrivateRoute } from './PrivateRoute'
 import { PublicRoute } from './PublicRoute'
+import { RoleRoute } from './RoleRoute'
 import { DefaultLayout } from '@/layouts/DefaultLayout'
-import { SuspenseWrapper } from '@/components/common//SuspenseWrapper'
+import { SuspenseWrapper } from '@/components/common/SuspenseWrapper'
 import ErrorPage from '@/pages/ErrorPage'
+
 const LoginPage = lazy(() => import('@/features/auth/pages/LoginPage'))
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'))
-const CategoriesPage = lazy(
-  () => import('@/features/categories/pages/CategoriesPage')
-)
-const TagsPage = lazy(() => import('@/features/categories/pages/TagsPage'))
 const UnauthorizedPage = lazy(() => import('@/pages/UnauthorizedPage'))
-const AuthorsPage = lazy(() => import('@/features/authors/pages/AuthorsPage'))
+const HomePage = lazy(() => import('@/features/home/pages/HomePage'))
+
+// ── Contributor+ ──────────────────────────────────────────────────────────────
 const StoriesPage = lazy(() => import('@/features/stories/pages/StoriesPage'))
 const StoryDetailPage = lazy(
   () => import('@/features/stories/pages/StoryDetailPage')
@@ -35,6 +35,17 @@ const EditChapterPage = lazy(
 const ChapterDetailPage = lazy(
   () => import('@/features/chapters/pages/ChapterDetailPage')
 )
+const ProfilePage = lazy(() => import('@/features/profile/pages/ProfilePage'))
+const SettingsPage = lazy(
+  () => import('@/features/settings/pages/SettingsPage')
+)
+
+// ── Admin+ ────────────────────────────────────────────────────────────────────
+const CategoriesPage = lazy(
+  () => import('@/features/categories/pages/CategoriesPage')
+)
+const TagsPage = lazy(() => import('@/features/categories/pages/TagsPage'))
+const AuthorsPage = lazy(() => import('@/features/authors/pages/AuthorsPage'))
 const AffiliateLinksPage = lazy(
   () => import('@/features/affiliate/pages/AffiliateLinksPage')
 )
@@ -62,31 +73,28 @@ const TopChaptersPage = lazy(
 const TopStoriesPage = lazy(
   () => import('@/features/analytics/pages/TopStoriesPage')
 )
+
+// ── SuperAdmin ────────────────────────────────────────────────────────────────
 const StaffPage = lazy(() => import('@/features/users/pages/StaffPage'))
-const ProfilePage = lazy(() => import('@/features/profile/pages/ProfilePage'))
-const SettingsPage = lazy(
-  () => import('@/features/settings/pages/SettingsPage')
-)
 
 export const router = createBrowserRouter([
+  // ── Public ──────────────────────────────────────────────────────────────────
   {
     element: <PublicRoute />,
     errorElement: <ErrorPage />,
     children: [
       {
-        children: [
-          {
-            path: '/login',
-            element: (
-              <SuspenseWrapper>
-                <LoginPage />
-              </SuspenseWrapper>
-            ),
-          },
-        ],
+        path: '/login',
+        element: (
+          <SuspenseWrapper>
+            <LoginPage />
+          </SuspenseWrapper>
+        ),
       },
     ],
   },
+
+  // ── Protected ────────────────────────────────────────────────────────────────
   {
     element: <PrivateRoute />,
     errorElement: <ErrorPage />,
@@ -94,14 +102,19 @@ export const router = createBrowserRouter([
       {
         element: <DefaultLayout />,
         children: [
+          { path: '/', element: <Navigate to="/home" replace /> },
+
+          // /home tự redirect theo role — không nằm trong RoleRoute nào
           {
             path: '/home',
             element: (
               <SuspenseWrapper>
-                <AnalyticsDashboardPage />
+                <HomePage />
               </SuspenseWrapper>
             ),
           },
+
+          // ── Contributor+ — không wrap RoleRoute, mọi staff đều vào được ────
           {
             path: '/profile',
             element: (
@@ -111,14 +124,84 @@ export const router = createBrowserRouter([
             ),
           },
           {
-            path: '/',
-            element: <Navigate to="/home" replace />,
+            path: '/settings',
+            element: (
+              <SuspenseWrapper>
+                <SettingsPage />
+              </SuspenseWrapper>
+            ),
           },
           {
-            path: '/content',
+            path: '/content/stories',
+            element: (
+              <SuspenseWrapper>
+                <StoriesPage />
+              </SuspenseWrapper>
+            ),
+          },
+          {
+            path: '/content/stories/create',
+            element: (
+              <SuspenseWrapper>
+                <CreateStoryPage />
+              </SuspenseWrapper>
+            ),
+          },
+          {
+            path: '/content/stories/:id',
+            element: (
+              <SuspenseWrapper>
+                <StoryDetailPage />
+              </SuspenseWrapper>
+            ),
+          },
+          {
+            path: '/content/stories/:id/edit',
+            element: (
+              <SuspenseWrapper>
+                <EditStoryPage />
+              </SuspenseWrapper>
+            ),
+          },
+          {
+            path: '/content/stories/:storyId/chapters',
+            element: (
+              <SuspenseWrapper>
+                <ChaptersPage />
+              </SuspenseWrapper>
+            ),
+          },
+          {
+            path: '/content/stories/:storyId/chapters/create',
+            element: (
+              <SuspenseWrapper>
+                <CreateChapterPage />
+              </SuspenseWrapper>
+            ),
+          },
+          {
+            path: '/content/stories/:storyId/chapters/:id',
+            element: (
+              <SuspenseWrapper>
+                <ChapterDetailPage />
+              </SuspenseWrapper>
+            ),
+          },
+          {
+            path: '/content/stories/:storyId/chapters/:id/edit',
+            element: (
+              <SuspenseWrapper>
+                <EditChapterPage />
+              </SuspenseWrapper>
+            ),
+          },
+
+          // ── Admin+ ─────────────────────────────────────────────────────────
+          {
+            element: <RoleRoute minRole="Admin" />,
             children: [
               {
-                path: 'categories',
+                path: '/content/categories',
                 element: (
                   <SuspenseWrapper>
                     <CategoriesPage />
@@ -126,7 +209,7 @@ export const router = createBrowserRouter([
                 ),
               },
               {
-                path: 'tags',
+                path: '/content/tags',
                 element: (
                   <SuspenseWrapper>
                     <TagsPage />
@@ -134,7 +217,7 @@ export const router = createBrowserRouter([
                 ),
               },
               {
-                path: 'authors',
+                path: '/content/authors',
                 element: (
                   <SuspenseWrapper>
                     <AuthorsPage />
@@ -142,76 +225,7 @@ export const router = createBrowserRouter([
                 ),
               },
               {
-                path: 'stories',
-                element: (
-                  <SuspenseWrapper>
-                    <StoriesPage />
-                  </SuspenseWrapper>
-                ),
-              },
-              {
-                path: 'stories/:id',
-                element: (
-                  <SuspenseWrapper>
-                    <StoryDetailPage />
-                  </SuspenseWrapper>
-                ),
-              },
-              {
-                path: 'stories/create',
-                element: (
-                  <SuspenseWrapper>
-                    <CreateStoryPage />
-                  </SuspenseWrapper>
-                ),
-              },
-              {
-                path: 'stories/:id/edit',
-                element: (
-                  <SuspenseWrapper>
-                    <EditStoryPage />
-                  </SuspenseWrapper>
-                ),
-              },
-              {
-                path: 'stories/:storyId/chapters',
-                element: (
-                  <SuspenseWrapper>
-                    <ChaptersPage />
-                  </SuspenseWrapper>
-                ),
-              },
-              {
-                path: 'stories/:storyId/chapters/:id',
-                element: (
-                  <SuspenseWrapper>
-                    <ChapterDetailPage />
-                  </SuspenseWrapper>
-                ),
-              },
-              {
-                path: 'stories/:storyId/chapters/create',
-                element: (
-                  <SuspenseWrapper>
-                    <CreateChapterPage />
-                  </SuspenseWrapper>
-                ),
-              },
-              {
-                path: 'stories/:storyId/chapters/:id/edit',
-                element: (
-                  <SuspenseWrapper>
-                    <EditChapterPage />
-                  </SuspenseWrapper>
-                ),
-              },
-            ],
-          },
-          {
-            path: '/affiliate',
-            children: [
-              {
-                path: 'links',
+                path: '/affiliate/links',
                 element: (
                   <SuspenseWrapper>
                     <AffiliateLinksPage />
@@ -219,15 +233,7 @@ export const router = createBrowserRouter([
                 ),
               },
               {
-                path: 'links/:id',
-                element: (
-                  <SuspenseWrapper>
-                    <AffiliateLinkDetailPage />
-                  </SuspenseWrapper>
-                ),
-              },
-              {
-                path: 'links/create',
+                path: '/affiliate/links/create',
                 element: (
                   <SuspenseWrapper>
                     <CreateAffiliateLinkPage />
@@ -235,7 +241,15 @@ export const router = createBrowserRouter([
                 ),
               },
               {
-                path: 'links/:id/edit',
+                path: '/affiliate/links/:id',
+                element: (
+                  <SuspenseWrapper>
+                    <AffiliateLinkDetailPage />
+                  </SuspenseWrapper>
+                ),
+              },
+              {
+                path: '/affiliate/links/:id/edit',
                 element: (
                   <SuspenseWrapper>
                     <EditAffiliateLinkPage />
@@ -243,21 +257,23 @@ export const router = createBrowserRouter([
                 ),
               },
               {
-                path: 'reports',
+                path: '/affiliate/reports',
                 element: (
                   <SuspenseWrapper>
                     <AffiliateReportsPage />
                   </SuspenseWrapper>
                 ),
               },
-            ],
-          },
-
-          {
-            path: '/analytics',
-            children: [
               {
-                path: 'top-stories',
+                path: '/analytics',
+                element: (
+                  <SuspenseWrapper>
+                    <AnalyticsDashboardPage />
+                  </SuspenseWrapper>
+                ),
+              },
+              {
+                path: '/analytics/top-stories',
                 element: (
                   <SuspenseWrapper>
                     <TopStoriesPage />
@@ -265,7 +281,7 @@ export const router = createBrowserRouter([
                 ),
               },
               {
-                path: 'top-chapters',
+                path: '/analytics/top-chapters',
                 element: (
                   <SuspenseWrapper>
                     <TopChaptersPage />
@@ -273,7 +289,7 @@ export const router = createBrowserRouter([
                 ),
               },
               {
-                path: 'stories/:storyId',
+                path: '/analytics/stories/:storyId',
                 element: (
                   <SuspenseWrapper>
                     <StoryAnalyticsPage />
@@ -282,27 +298,16 @@ export const router = createBrowserRouter([
               },
             ],
           },
+
+          // ── SuperAdmin ─────────────────────────────────────────────────────
           {
-            path: '/users',
+            element: <RoleRoute minRole="SuperAdmin" />,
             children: [
               {
-                path: '',
+                path: '/users',
                 element: (
                   <SuspenseWrapper>
                     <StaffPage />
-                  </SuspenseWrapper>
-                ),
-              },
-            ],
-          },
-          {
-            path: '/settings',
-            children: [
-              {
-                path: '',
-                element: (
-                  <SuspenseWrapper>
-                    <SettingsPage />
                   </SuspenseWrapper>
                 ),
               },
@@ -312,6 +317,8 @@ export const router = createBrowserRouter([
       },
     ],
   },
+
+  // ── Fallback ─────────────────────────────────────────────────────────────────
   {
     path: '/unauthorized',
     element: (

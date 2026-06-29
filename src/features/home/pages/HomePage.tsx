@@ -1,8 +1,13 @@
-import { usePageTitle } from '@/hooks/usePageTitle'
+import { Navigate } from 'react-router-dom'
+import useAuthStore from '@/store/authStore'
+import AnalyticsDashboardPage from '@/features/analytics/pages/AnalyticsDashboardPage'
 
-export const HomePage = () => {
-  usePageTitle('Trang chủ')
-  return <h1>TRANG CHỦ</h1>
+export default function HomePage() {
+  const { hasMinRole } = useAuthStore()
+
+  if (hasMinRole('Admin')) {
+    return <AnalyticsDashboardPage />
+  }
+
+  return <Navigate to="/content/stories" replace />
 }
-
-export default HomePage

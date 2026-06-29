@@ -49,7 +49,8 @@ export const useAuth = () => {
     mutationFn: (credentials: LoginInput) => authService.login(credentials),
     onSuccess: (data) => {
       setAuthFromResult(data.user, data.accessToken, data.refreshToken)
-      navigate('/home')
+      const destination = hasMinRole('Admin') ? '/home' : '/content/stories'
+      navigate(destination)
     },
     onError: (error: any) => {
       toast.error(error?.message ?? 'Login failed. Please try again.')
