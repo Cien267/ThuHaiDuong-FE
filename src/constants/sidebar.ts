@@ -21,6 +21,28 @@ interface MenuItem {
   children?: MenuItem[]
 }
 
+export const filterMenu = (items: MenuItem[], role?: string): MenuItem[] => {
+  return items
+    .map((item) => {
+      const children = item.children
+        ? filterMenu(item.children, role)
+        : undefined
+
+      const hasPermission =
+        !item.roles?.length || (role ? item.roles.includes(role) : false)
+
+      if (!hasPermission && (!children || children.length === 0)) {
+        return null
+      }
+
+      return {
+        ...item,
+        children,
+      }
+    })
+    .filter(Boolean) as MenuItem[]
+}
+
 export const SIDEBAR_MENU: MenuItem[] = [
   {
     id: 'home',
@@ -49,21 +71,21 @@ export const SIDEBAR_MENU: MenuItem[] = [
         label: 'Tác giả',
         icon: User,
         path: '/content/authors',
-        roles: ['Contributor', 'Admin', 'SuperAdmin'],
+        roles: ['Admin', 'SuperAdmin'],
       },
       {
         id: 'categories',
         label: 'Thể loại',
         icon: Folder,
         path: '/content/categories',
-        roles: ['Contributor', 'Admin', 'SuperAdmin'],
+        roles: ['Admin', 'SuperAdmin'],
       },
       {
         id: 'tags',
         label: 'Thẻ',
         icon: Tag,
         path: '/content/tags',
-        roles: ['Contributor', 'Admin', 'SuperAdmin'],
+        roles: ['Admin', 'SuperAdmin'],
       },
     ],
   },

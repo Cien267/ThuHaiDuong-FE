@@ -20,7 +20,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { useAuth } from '@/features/auth/hooks/useAuth'
 import { useState } from 'react'
-import { SIDEBAR_MENU } from '@/constants/sidebar'
+import { SIDEBAR_MENU, filterMenu } from '@/constants/sidebar'
 
 export const Sidebar: React.FC = () => {
   const { user, logout } = useAuth()
@@ -38,10 +38,7 @@ export const Sidebar: React.FC = () => {
     localStorage.setItem('sidebar-collapsed', String(newState))
   }
 
-  const filteredMenuItems = SIDEBAR_MENU.filter((item) => {
-    if (!item.roles?.length) return true
-    return user && item.roles?.includes(user.role)
-  })
+  const filteredMenuItems = filterMenu(SIDEBAR_MENU, user?.role)
 
   const isActiveRoute = (path: string) => {
     if (!path) return false
