@@ -61,6 +61,7 @@ import useAuthStore from '@/store/authStore'
 import { STORY_STATUS_OPTIONS } from '../types/story.types'
 import { STORY_PAGE_SIZE } from '../constants/story.constants'
 import type { StoryAdminResult, StoryStatus } from '../types/story.types'
+import { useAuthorList } from '@/features/authors/hooks/useAuthors'
 
 export const StoriesPage = () => {
   const navigate = useNavigate()
@@ -72,6 +73,7 @@ export const StoriesPage = () => {
   // ── Filters ───────────────────────────────────────────────────────────────────
   const [keyword, setKeyword] = useState('')
   const [statusFilter, setStatusFilter] = useState<StoryStatus | ''>('')
+  const [authorFilter, setAuthorFilter] = useState<string | undefined | ''>('')
   const [page, setPage] = useState(1)
 
   // ── Dialog state ──────────────────────────────────────────────────────────────
@@ -85,9 +87,13 @@ export const StoriesPage = () => {
   const { data, isLoading } = useStoryList({
     keyword: debouncedKeyword || undefined,
     status: statusFilter || undefined,
+    authorId: authorFilter || undefined,
     pageNumber: page,
     pageSize: STORY_PAGE_SIZE,
   })
+
+  const { data: authorsData } = useAuthorList({})
+  const authors = authorsData?.data ?? []
 
   // ── Mutations ─────────────────────────────────────────────────────────────────
   const updateStatusMutation = useUpdateStoryStatus(statusStory?.id ?? '')
@@ -150,6 +156,27 @@ export const StoriesPage = () => {
             ))}
           </SelectContent>
         </Select>
+        {isAdmin && (
+          <Select
+            onValueChange={(e) => {
+              setAuthorFilter(e === 'all' ? undefined : e)
+              setPage(1)
+            }}
+            value={authorFilter}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Chọn tác giả" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Tất cả tác giả</SelectItem>
+              {authors.map((s) => (
+                <SelectItem key={s.id} value={s.id}>
+                  {s.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        )}
       </div>
 
       {/* Table */}
