@@ -16,6 +16,7 @@ import { Separator } from '@/components/ui/separator'
 import { useAuth } from '@/features/auth/hooks/useAuth'
 import { useTheme } from '@/hooks/useTheme'
 import { HeaderBreadcrumb } from '@/components/common/layouts/Header/Breadcrumb'
+import { NotificationBell } from '@/features/notifications/components/NotificationBell'
 
 export const Header: React.FC = () => {
   const { user, logout } = useAuth()
@@ -51,7 +52,7 @@ export const Header: React.FC = () => {
           <span className="sr-only">Toggle theme</span>
         </Button>
 
-        {/* <Notifications /> */}
+        <NotificationBell />
 
         <Separator orientation="vertical" className="h-6" />
 

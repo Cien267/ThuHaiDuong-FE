@@ -4,8 +4,10 @@ import { Sidebar } from '../components/common/layouts/Sidebar/Sidebar'
 import { Footer } from '../components/common/layouts/Footer/Footer'
 import { ModalProvider } from '@/components/common/modal/ModalProvider'
 import { Toaster } from 'sonner'
+import { useNotificationHub } from '@/features/notifications/hooks/useNotifications'
 
 export const DefaultLayout: React.FC = () => {
+  useNotificationHub()
   return (
     <ModalProvider>
       <div className="flex min-h-screen bg-gray-50 overflow-hidden">
