@@ -24,6 +24,7 @@ export function EditAffiliateLinkPage() {
       endDate: values.endDate || undefined,
       storyIds: values.storyIds,
       chapterIds: values.chapterIds,
+      imageUrl: values.imageUrl || undefined,
     })
   }
 

@@ -162,6 +162,10 @@ export default function AffiliateLinkDetailPage() {
           <span>{link.priority}</span>
         </InfoRow>
 
+        <InfoRow label="Ảnh">
+          <img src={link.imageUrl} alt={link.name} className="w-60 h-auto" />
+        </InfoRow>
+
         <InfoRow label="URL đích">
           <a
             href={link.targetUrl}

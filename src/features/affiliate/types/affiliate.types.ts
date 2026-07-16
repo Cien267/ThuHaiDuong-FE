@@ -41,6 +41,7 @@ export interface AffiliateLinkResult {
   updatedAt: string
   stories: AffiliateLinkTargetItem[]
   chapters: AffiliateLinkTargetItem[]
+  imageUrl: string
 }
 
 export interface AffiliateClickResult {
@@ -119,6 +120,7 @@ export interface CreateAffiliateLinkInput {
   endDate?: string
   storyIds: string[]
   chapterIds: string[]
+  imageUrl?: string
 }
 
 export interface UpdateAffiliateLinkInput {
@@ -131,4 +133,5 @@ export interface UpdateAffiliateLinkInput {
   endDate?: string
   storyIds: string[]
   chapterIds: string[]
+  imageUrl?: string
 }

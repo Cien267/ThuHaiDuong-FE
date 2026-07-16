@@ -82,6 +82,12 @@ export const useDeleteAffiliateLink = () => {
   })
 }
 
+export const useUploadAffiliateImage = () =>
+  useMutation({
+    mutationFn: (file: File) => affiliateService.uploadAffiliateImage(file),
+    onError: () => toast.error('Upload ảnh thất bại, vui lòng thử lại'),
+  })
+
 // ── Report hooks ──────────────────────────────────────────────────────────────
 
 export const useAffiliateDailyStats = (query: AffiliateDailyStatQuery) =>

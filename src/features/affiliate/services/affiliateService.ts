@@ -49,6 +49,18 @@ export const affiliateService = {
     await api.delete(`admin/affiliate/links/${id}`)
   },
 
+  uploadAffiliateImage: (file: File): Promise<string> => {
+    const formData = new FormData()
+    formData.append('file', file)
+    return api
+      .post<{
+        imageUrl: string
+      }>('admin/affiliate/links/upload-image', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      })
+      .then((r) => r.data.imageUrl)
+  },
+
   // ── Reports ─────────────────────────────────────────────────────────────────
 
   getDailyStats: async (

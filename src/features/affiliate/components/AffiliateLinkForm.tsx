@@ -53,6 +53,7 @@ import type {
 } from '../types/affiliate.types'
 import { DatePicker } from '@/components/common/DatePicker'
 import { InputNumber } from '@/components/common/InputNumber'
+import { AffiliateImageUpload } from './AffiliateImageUpload'
 
 // ── Story search combobox ─────────────────────────────────────────────────────
 
@@ -346,6 +347,7 @@ export function AffiliateLinkForm({
           endDate: initialData.endDate?.slice(0, 10) ?? '',
           storyIds: initialData.stories.map((s) => s.id),
           chapterIds: initialData.chapters.map((c) => c.id),
+          imageUrl: initialData.imageUrl,
         }
       : AFFILIATE_LINK_DEFAULTS,
   })
@@ -490,6 +492,8 @@ export function AffiliateLinkForm({
               )}
             />
           )}
+
+          <AffiliateImageUpload />
         </div>
 
         {/* ── Cấu hình hiển thị ── */}

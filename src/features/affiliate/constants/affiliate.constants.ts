@@ -42,6 +42,7 @@ export const affiliateLinkSchema = z
     endDate: z.string().optional().or(z.literal('')),
     storyIds: z.array(z.string()),
     chapterIds: z.array(z.string()),
+    imageUrl: z.string().optional(),
   })
   .refine(
     (data) => {
@@ -66,4 +67,5 @@ export const AFFILIATE_LINK_DEFAULTS: AffiliateLinkFormValues = {
   endDate: '',
   storyIds: [],
   chapterIds: [],
+  imageUrl: '',
 }
