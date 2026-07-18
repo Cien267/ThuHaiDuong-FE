@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { X, Search, Loader2 } from 'lucide-react'
@@ -54,6 +54,7 @@ import type {
 import { DatePicker } from '@/components/common/DatePicker'
 import { InputNumber } from '@/components/common/InputNumber'
 import { AffiliateImageUpload } from './AffiliateImageUpload'
+import { useLinkPreview } from '@/features/link-preview/hooks/useLinkPreview'
 
 // ── Story search combobox ─────────────────────────────────────────────────────
 
@@ -70,7 +71,7 @@ function StorySearchBox({
 }: StorySearchBoxProps) {
   const [open, setOpen] = useState(false)
   const [input, setInput] = useState('')
-  const [debouncedInput] = useDebounce(input, 300)
+  const debouncedInput = useDebounce(input, 300)
 
   const { data, isLoading } = useStoryList({
     keyword: debouncedInput || undefined,
@@ -352,6 +353,33 @@ export function AffiliateLinkForm({
       : AFFILIATE_LINK_DEFAULTS,
   })
 
+  const [urlInput, setUrlInput] = useState(initialData?.targetUrl ?? '')
+  const debouncedUrl = useDebounce(urlInput, 800)
+
+  const isValidUrl = Boolean(
+    debouncedUrl?.startsWith('http') && debouncedUrl.includes('.')
+  )
+
+  const { data: preview } = useLinkPreview(debouncedUrl ?? '', isValidUrl)
+  const lastSetImageRef = useRef<string | null>(null)
+
+  useEffect(() => {
+    if (!preview?.image) return
+    if (preview.image === lastSetImageRef.current) return
+
+    // Khi edit: chỉ auto-set nếu imageUrl hiện tại trống
+    // (không override ảnh user đã chọn thủ công)
+    const currentImage = form.getValues('imageUrl')
+    if (isEdit && currentImage && currentImage !== lastSetImageRef.current)
+      return
+
+    lastSetImageRef.current = preview.image
+    form.setValue('imageUrl', preview.image, {
+      shouldDirty: true,
+      shouldValidate: true,
+    })
+  }, [preview?.image])
+
   const [selectedStories, setSelectedStories] = useState<
     AffiliateLinkTargetItem[]
   >(initialData?.stories ?? [])
@@ -440,11 +468,19 @@ export function AffiliateLinkForm({
           <FormField
             control={form.control}
             name="targetUrl"
-            render={({ field }) => (
+            render={() => (
               <FormItem>
                 <FormLabel>URL đích</FormLabel>
                 <FormControl>
-                  <Input placeholder="https://..." {...field} />
+                  <Input
+                    id="targetUrl"
+                    {...form.register('targetUrl')}
+                    onChange={(e) => {
+                      form.setValue('targetUrl', e.target.value)
+                      setUrlInput(e.target.value)
+                    }}
+                    placeholder="https://..."
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
